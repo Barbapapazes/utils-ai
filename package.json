@@ -1,7 +1,7 @@
 {
   "name": "utils-ai",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "packageManager": "pnpm@8.7.1",
   "description": "A CLI of AI Utils",
   "author": "Barbapapazes",
