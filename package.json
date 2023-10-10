@@ -4,8 +4,9 @@
   "version": "0.1.1",
   "packageManager": "pnpm@8.7.1",
   "description": "A CLI of AI Utils",
-  "author": "Barbapapazes",
+  "author": "Estéban Soubiran <e.soubiran25@gmail.com> (https://github.com/barbapapazes/)",
   "license": "MIT",
+  "homepage": "https://github.com/barbapapazes/utils-ai",
   "keywords": [
     "utils",
     "ai",
