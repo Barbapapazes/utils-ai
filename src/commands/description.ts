@@ -1,21 +1,22 @@
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { defineCommand } from 'citty'
+import consola from 'consola'
 import type { Language, Message } from '../types'
-import { getPrompt } from './utils/prompts'
 import { mustBeMarkdown } from './utils/filename'
 import { getAccessKey } from './utils/config'
 import { fetchCompletion } from './utils/chat'
+import { getPrompt } from './utils/prompts'
 
 export default defineCommand({
   meta: {
-    name: 'correct',
-    description: 'Correct content of a file',
+    name: 'description',
+    description: 'Generate a description from content of a file',
   },
   args: {
     filename: {
       type: 'positional',
       required: true,
-      description: 'File to correct',
+      description: 'File to generate the description from',
     },
     // TODO: use enum https://github.com/unjs/citty/pull/83
     language: {
@@ -32,7 +33,7 @@ export default defineCommand({
 
     const accessKey = getAccessKey()
 
-    const prompt = getPrompt('spell-checker', args.language as Language)
+    const prompt = getPrompt('descriptor', args.language as Language)
     const messages: Message[] = [
       {
         role: 'system',
@@ -46,8 +47,8 @@ export default defineCommand({
 
     const response = await fetchCompletion(messages, { accessKey })
 
-    const corrected = response.choices[0].message.content
-
-    writeFileSync(args.filename, corrected, 'utf-8')
+    const description = response.choices[0].message.content
+    // TODO: copy to clipboard
+    consola.log(description)
   },
 })
