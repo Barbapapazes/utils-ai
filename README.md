@@ -8,10 +8,10 @@
 
 ## Features
 
-✅ Spell Check
-✅ Description Generator
-✅ Multi Language Support (English, French)
-✅ OpenAI API
+- ✅ Spell Check
+- ✅ Description Generator
+- ✅ Multi Language Support (English, French)
+- ✅ OpenAI API
 
 ## Usage
 
