@@ -10,5 +10,6 @@ export const main = defineCommand({
   subCommands: {
     setup: () => import('./commands/setup').then(m => m.default),
     correct: () => import('./commands/correct').then(m => m.default),
+    description: () => import('./commands/description').then(m => m.default),
   },
 })
