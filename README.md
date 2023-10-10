@@ -1,6 +1,6 @@
 # Utils AI
 
-**A CLI of AI Utils for writers**
+**A CLI tool for writers that provides AI utilities including a spell checker and a description generator.**
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -11,6 +11,7 @@
 ✅ Spell Check
 ✅ Description Generator
 ✅ Multi Language Support (English, French)
+✅ OpenAI API
 
 ## Usage
 
