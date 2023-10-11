@@ -1,50 +1,19 @@
 {
   "name": "utils-ai",
   "type": "module",
-  "version": "0.1.1",
   "packageManager": "pnpm@8.7.1",
-  "description": "A CLI of AI Utils",
-  "author": "Estéban Soubiran <e.soubiran25@gmail.com> (https://github.com/barbapapazes/)",
+  "description": "A Set of AI Utils",
   "license": "MIT",
-  "homepage": "https://github.com/barbapapazes/utils-ai",
-  "keywords": [
-    "utils",
-    "ai",
-    "cli"
-  ],
-  "exports": {
-    ".": "./dist/index.mjs",
-    "./cli": "./bin/index.mjs"
-  },
-  "types": "./dist/index.d.ts",
-  "bin": "./bin/index.mjs",
-  "files": [
-    "bin",
-    "dist"
-  ],
   "scripts": {
-    "dev": "jiti src/.ts",
-    "build": "unbuild",
-    "build:stub": "unbuild --stub",
-    "start": "node bin/index.mjs",
-    "release": "bumpp",
+    "release": "bumpp -r",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prepublishOnly": "pnpm run build"
-  },
-  "dependencies": {
-    "citty": "^0.1.4",
-    "consola": "^3.2.3",
-    "ofetch": "^1.3.3",
-    "rc9": "^2.1.1"
+    "publish:utils-ai": "pnpm --filter utils-ai  publish --access public --no-git-checks",
+    "build": "pnpm run -r build"
   },
   "devDependencies": {
     "@antfu/eslint-config": "1.0.0-beta.22",
-    "@types/node": "^20.8.3",
     "bumpp": "^9.2.0",
-    "eslint": "^8.51.0",
-    "jiti": "^1.20.0",
-    "typescript": "^5.2.2",
-    "unbuild": "^2.0.0"
+    "eslint": "^8.51.0"
   }
 }

@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - run: pnpm publish --access public --no-git-checks
+      - run: pnpm run publish:utils-ai
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
