@@ -68,7 +68,7 @@
   },
   "scripts": {
     "dev": "pnpm run build --watch src",
-    "build": "tsup src/index.ts --external vscode",
+    "build": "tsup src/index.ts",
     "vscode:prepublish": "pnpm run build",
     "publish": "vsce publish --no-dependencies"
   },
@@ -76,7 +76,7 @@
     "utils-ai": "0.1.2"
   },
   "devDependencies": {
-    "@types/node": "18.x",
+    "@types/node": "^18.18.4",
     "@types/vscode": "^1.83.0",
     "@vscode/vsce": "^2.21.1",
     "tsup": "^7.2.0",

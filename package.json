@@ -3,14 +3,14 @@
   "type": "module",
   "version": "0.1.3",
   "private": true,
-  "packageManager": "pnpm@8.7.1",
+  "packageManager": "pnpm@8.9.0",
   "description": "A Set of AI Utils",
   "license": "MIT",
   "scripts": {
     "release": "bumpp -r",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "pnpm run -r build",
+    "build": "pnpm run --filter utils-ai build && pnpm run --filter utils-ai-vscode build",
     "build:stub": "pnpm run -r build:stub",
     "postinstall": "pnpm run build:stub",
     "ext:dev": "pnpm run --filter utils-ai-vscode dev"
