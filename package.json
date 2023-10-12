@@ -8,12 +8,15 @@
     "release": "bumpp -r",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "publish:utils-ai": "pnpm --filter utils-ai  publish --access public --no-git-checks",
-    "build": "pnpm run -r build"
+    "build": "pnpm run -r build",
+    "build:stub": "pnpm run -r build:stub",
+    "postinstall": "pnpm run build:stub",
+    "ext:dev": "pnpm run --filter utils-ai-vscode dev"
   },
   "devDependencies": {
     "@antfu/eslint-config": "1.0.0-beta.22",
     "bumpp": "^9.2.0",
     "eslint": "^8.51.0"
-  }
+  },
+  "version": "0.1.2"
 }
