@@ -22,40 +22,44 @@
   "contributes": {
     "commands": [
       {
-        "command": "utils-ai.addOpenAIKey",
-        "title": "Utils AI: Add OpenAI API Key"
+        "command": "barbapapazes.utils-ai-vscode.addOpenAIKey",
+        "title": "Add OpenAI API Key",
+        "category": "Utils AI"
       },
       {
-        "command": "utils-ai.removeOpenAIKey",
-        "title": "Utils AI: Remove OpenAI API Key"
+        "command": "barbapapazes.utils-ai-vscode.removeOpenAIKey",
+        "title": "Remove OpenAI API Key",
+        "category": "Utils AI"
       },
       {
-        "command": "utils-ai.correct",
-        "title": "Utils AI: Correct current file",
+        "command": "barbapapazes.utils-ai-vscode.correct",
+        "title": "Correct current file",
+        "category": "Utils AI",
         "icon": {
           "light": "./images/light.svg",
           "dark": "./images/dark.svg"
         }
       },
       {
-        "command": "utils-ai.description",
-        "title": "Utils AI: Generate description from current file"
+        "command": "barbapapazes.utils-ai-vscode.description",
+        "title": "Generate description from current file",
+        "category": "Utils AI"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "utils-ai.correct",
+          "command": "barbapapazes.utils-ai-vscode.correct",
           "when": "editorLangId == 'markdown'"
         },
         {
-          "command": "utils-ai.description",
+          "command": "barbapapazes.utils-ai-vscode.description",
           "when": "editorLangId == 'markdown'"
         }
       ],
       "editor/title": [
         {
-          "command": "utils-ai.correct",
+          "command": "barbapapazes.utils-ai-vscode.correct",
           "group": "navigation",
           "when": "editorLangId == 'markdown'"
         }
@@ -69,7 +73,7 @@
     "publish": "vsce publish --no-dependencies"
   },
   "dependencies": {
-    "utils-ai": "0.1.1"
+    "utils-ai": "0.1.2"
   },
   "devDependencies": {
     "@types/node": "18.x",

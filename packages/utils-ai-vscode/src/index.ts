@@ -6,7 +6,7 @@ import { correctCommand } from './commands/correct'
 export function activate(context: vscode.ExtensionContext) {
   const secrets = context.secrets
 
-  const addOpenAIKeyCommand = vscode.commands.registerCommand('utils-ai.addOpenAIKey', async () => {
+  const addOpenAIKeyCommand = vscode.commands.registerCommand('barbapapazes.utils-ai-vscode.addOpenAIKey', async () => {
     const key = await vscode.window.showInputBox({
       prompt: 'Enter your OpenAI API key',
       placeHolder: 'OpenAI API key',
@@ -19,14 +19,18 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     await addOpenAIKey(key, secrets)
+
+    vscode.window.showInformationMessage('OpenAI key added.')
   })
 
-  const removeOpenAIKeyCommand = vscode.commands.registerCommand('utils-ai.removeOpenAIKey', async () => {
+  const removeOpenAIKeyCommand = vscode.commands.registerCommand('barbapapazes.utils-ai-vscode.removeOpenAIKey', async () => {
     await removeOpenAIKey(secrets)
+
+    vscode.window.showInformationMessage('OpenAI key removed.')
   })
 
-  const correctCommandDisposable = vscode.commands.registerCommand('utils-ai.correct', correctCommand(context))
-  const descriptionCommandDisposable = vscode.commands.registerCommand('utils-ai.description', descriptionCommand(context))
+  const correctCommandDisposable = vscode.commands.registerCommand('barbapapazes.utils-ai-vscode.correct', correctCommand(context))
+  const descriptionCommandDisposable = vscode.commands.registerCommand('barbapapazes.utils-ai-vscode.description', descriptionCommand(context))
 
   context.subscriptions.push(addOpenAIKeyCommand, removeOpenAIKeyCommand, correctCommandDisposable, descriptionCommandDisposable)
 }

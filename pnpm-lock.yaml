@@ -49,8 +49,8 @@ importers:
   packages/utils-ai-vscode:
     dependencies:
       utils-ai:
-        specifier: 0.1.1
-        version: 0.1.1
+        specifier: 0.1.2
+        version: link:../utils-ai
     devDependencies:
       '@types/node':
         specifier: 18.x
@@ -4215,16 +4215,6 @@ packages:
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
-
-  /utils-ai@0.1.1:
-    resolution: {integrity: sha512-KDNXMOqMR98wivhwd7AhCX0Fc7cqa64Bn/I8Yph31RpREnApZPGscAg9dAJAOIU+HIGFKLYWnBuTDv6TY07Ivw==}
-    hasBin: true
-    dependencies:
-      citty: 0.1.4
-      consola: 3.2.3
-      ofetch: 1.3.3
-      rc9: 2.1.1
-    dev: false
 
   /validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
