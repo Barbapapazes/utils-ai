@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { addOpenAIKey, getOpenAIKey, removeOpenAIKey } from './secrets'
+import { addOpenAIKey, removeOpenAIKey } from './secrets'
 import { descriptionCommand } from './commands/description'
 import { correctCommand } from './commands/correct'
 
