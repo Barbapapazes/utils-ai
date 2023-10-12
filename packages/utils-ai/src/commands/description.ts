@@ -2,10 +2,10 @@ import { readFileSync } from 'node:fs'
 import { defineCommand } from 'citty'
 import consola from 'consola'
 import type { Language, Message } from '../types'
+import { getPrompt } from '../prompts'
+import { fetchCompletion, getFirstSuggestion } from '../chat'
 import { mustBeMarkdown } from './utils/filename'
 import { getAccessKey } from './utils/config'
-import { fetchCompletion } from './utils/chat'
-import { getPrompt } from './utils/prompts'
 
 export default defineCommand({
   meta: {
@@ -47,7 +47,7 @@ export default defineCommand({
 
     const response = await fetchCompletion(messages, { accessKey })
 
-    const description = response.choices[0].message.content
+    const description = getFirstSuggestion(response)
     // TODO: copy to clipboard
     consola.log(description)
   },

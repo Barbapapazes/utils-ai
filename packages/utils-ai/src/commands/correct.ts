@@ -1,10 +1,10 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { defineCommand } from 'citty'
 import type { Language, Message } from '../types'
-import { getPrompt } from './utils/prompts'
+import { getPrompt } from '../prompts'
+import { fetchCompletion } from '../chat'
 import { mustBeMarkdown } from './utils/filename'
 import { getAccessKey } from './utils/config'
-import { fetchCompletion } from './utils/chat'
 
 export default defineCommand({
   meta: {

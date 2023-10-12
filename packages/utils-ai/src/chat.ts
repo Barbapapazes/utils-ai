@@ -1,5 +1,5 @@
 import { ofetch } from 'ofetch'
-import type { Completion, Message } from '../../types'
+import type { Completion, Message } from './types'
 
 export async function fetchCompletion(messages: Message[], options: { accessKey: string }): Promise<Completion> {
   return ofetch<Completion>('https://api.openai.com/v1/chat/completions', {
@@ -13,4 +13,8 @@ export async function fetchCompletion(messages: Message[], options: { accessKey:
       messages,
     },
   })
+}
+
+export function getFirstSuggestion(completion: Completion) {
+  return completion.choices[0].message.content
 }

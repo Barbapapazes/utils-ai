@@ -1,0 +1,81 @@
+{
+  "publisher": "barbapapazes",
+  "name": "utils-ai-vscode",
+  "displayName": "Utils AI",
+  "version": "0.1.1",
+  "private": true,
+  "description": "Write faster with AI",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/barbapapazes/utils-ai",
+    "directory": "packages/utils-ai-vscode"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/index.js",
+  "engines": {
+    "vscode": "^1.83.0"
+  },
+  "activationEvents": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "utils-ai.addOpenAIKey",
+        "title": "Utils AI: Add OpenAI API Key"
+      },
+      {
+        "command": "utils-ai.removeOpenAIKey",
+        "title": "Utils AI: Remove OpenAI API Key"
+      },
+      {
+        "command": "utils-ai.correct",
+        "title": "Utils AI: Correct current file",
+        "icon": {
+          "light": "./images/light.svg",
+          "dark": "./images/dark.svg"
+        }
+      },
+      {
+        "command": "utils-ai.description",
+        "title": "Utils AI: Generate description from current file"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "utils-ai.correct",
+          "when": "editorLangId == 'markdown'"
+        },
+        {
+          "command": "utils-ai.description",
+          "when": "editorLangId == 'markdown'"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "utils-ai.correct",
+          "group": "navigation",
+          "when": "editorLangId == 'markdown'"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "dev": "pnpm run build --watch src",
+    "build": "tsup src/index.ts --external vscode",
+    "vscode:prepublish": "pnpm run build",
+    "publish": "vsce publish --no-dependencies"
+  },
+  "dependencies": {
+    "utils-ai": "0.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "18.x",
+    "@types/vscode": "^1.83.0",
+    "@vscode/vsce": "^2.21.1",
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.2"
+  }
+}

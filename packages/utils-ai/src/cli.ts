@@ -1,7 +1,7 @@
-import { defineCommand } from 'citty'
+import { defineCommand, runMain } from 'citty'
 import utilsAIPackage from '../package.json' assert { type: 'json' }
 
-export const main = defineCommand({
+const main = defineCommand({
   meta: {
     name: utilsAIPackage.name,
     version: utilsAIPackage.version,
@@ -13,3 +13,5 @@ export const main = defineCommand({
     description: () => import('./commands/description').then(m => m.default),
   },
 })
+
+export { runMain, main }

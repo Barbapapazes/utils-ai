@@ -1,4 +1,4 @@
-import type { Language, Prompts } from './types'
+import type { Language, PromptName, Prompts } from './types'
 
 export const languages: Language[] = ['fr', 'en']
 
@@ -23,4 +23,8 @@ export const prompts: Prompts = {
       message: 'You are a description generator. You must generate a description of the following text. The description must be short, no more than 2 sentences. The description must make you want to read the text.',
     },
   },
+}
+
+export function getPrompt(name: PromptName, language: Language) {
+  return prompts[language][name]
 }
