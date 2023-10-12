@@ -1,6 +1,8 @@
 {
   "name": "utils-ai",
   "type": "module",
+  "version": "0.1.1",
+  "private": true,
   "packageManager": "pnpm@8.7.1",
   "description": "A Set of AI Utils",
   "license": "MIT",
@@ -17,6 +19,5 @@
     "@antfu/eslint-config": "1.0.0-beta.22",
     "bumpp": "^9.2.0",
     "eslint": "^8.51.0"
-  },
-  "version": "0.1.2"
+  }
 }

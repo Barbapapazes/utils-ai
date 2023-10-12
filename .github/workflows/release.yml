@@ -25,9 +25,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - run: pnpm run publish:utils-ai
+      - run: pnpm -r publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+      - run: pnpm run --filter utils-ai-vscode publish
+        env:
+          VSCE_PAT: ${{secrets.VSCE_PAT}}
 
       - run: npx changelogithub
         env:
