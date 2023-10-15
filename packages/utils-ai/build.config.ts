@@ -7,6 +7,6 @@ export default defineBuildConfig({
   },
   entries: [
     'src/index.ts',
-    'src/cli.ts',
+    'src/cli/index.ts',
   ],
 })

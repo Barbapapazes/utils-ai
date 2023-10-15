@@ -16,7 +16,7 @@ export const prompts: Prompts = {
   en: {
     'spell-checker': {
       name: 'Spell checker',
-      message: 'You are a spell checker. You must correct the spelling mistakes in the following text. You must not change the meaning of the text. You must not add anything other than the corrected text.',
+      message: 'You are a spell checker. You must correct the spelling mistakes in the following text. You must not change the meaning of the text. You must not add anything other than the corrected text. Do not touch URLs.',
     },
     'descriptor': {
       name: 'Description generation',

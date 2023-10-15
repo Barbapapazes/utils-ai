@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.1.5",
   "packageManager": "pnpm@8.9.0",
-  "description": "A CLI of AI Utils",
+  "description": "A CLI of AI Utils for writers",
   "author": "Estéban Soubiran <e.soubiran25@gmail.com> (https://github.com/barbapapazes/)",
   "license": "MIT",
   "homepage": "https://github.com/barbapapazes/utils-ai",
@@ -22,8 +22,7 @@
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       }
-    },
-    "./cli": "./bin/index.mjs"
+    }
   },
   "main": "./dist/index.cjs",
   "types": "./dist/index.d.ts",
@@ -33,7 +32,6 @@
     "dist"
   ],
   "scripts": {
-    "dev": "jiti src/.ts",
     "build": "unbuild",
     "build:stub": "unbuild --stub",
     "start": "node bin/index.mjs",
@@ -42,6 +40,7 @@
   "dependencies": {
     "citty": "^0.1.4",
     "consola": "^3.2.3",
+    "defu": "^6.1.2",
     "ofetch": "^1.3.3",
     "rc9": "^2.1.1"
   },

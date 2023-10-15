@@ -1,7 +1,11 @@
 import { ofetch } from 'ofetch'
-import type { Completion, Message } from './types'
+import type { AI, Completion, Message } from './types'
 
-export async function fetchCompletion(messages: Message[], options: { accessKey: string }): Promise<Completion> {
+export function defineMessages(message: Message[]): Message[] {
+  return message
+}
+
+export async function fetchCompletion(messages: Message[], options: AI): Promise<Completion> {
   return ofetch<Completion>('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -11,6 +15,7 @@ export async function fetchCompletion(messages: Message[], options: { accessKey:
     body: {
       model: 'gpt-3.5-turbo',
       messages,
+      max_tokens: options.maxTokens,
     },
   })
 }

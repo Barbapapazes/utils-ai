@@ -33,7 +33,7 @@
       },
       {
         "command": "barbapapazes.utils-ai-vscode.correct",
-        "title": "Correct current file",
+        "title": "Correct current file using AI",
         "category": "Utils AI",
         "icon": {
           "light": "./images/light.svg",
@@ -42,7 +42,7 @@
       },
       {
         "command": "barbapapazes.utils-ai-vscode.description",
-        "title": "Generate description from current file",
+        "title": "Generate description from current file using AI",
         "category": "Utils AI"
       }
     ],
@@ -73,7 +73,7 @@
     "publish": "vsce publish --no-dependencies"
   },
   "dependencies": {
-    "utils-ai": "0.1.2"
+    "utils-ai": "0.1.5"
   },
   "devDependencies": {
     "@types/node": "^18.18.4",

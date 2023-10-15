@@ -1,3 +1,5 @@
 export * from './prompts'
 export * from './types'
 export * from './chat'
+export * from './utils'
+export * from './functions'

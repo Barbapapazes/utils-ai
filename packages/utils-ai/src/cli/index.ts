@@ -1,5 +1,5 @@
 import { defineCommand, runMain } from 'citty'
-import utilsAIPackage from '../package.json' assert { type: 'json' }
+import utilsAIPackage from '../../package.json' assert { type: 'json' }
 
 const main = defineCommand({
   meta: {

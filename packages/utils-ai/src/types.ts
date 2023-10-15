@@ -1,7 +1,12 @@
-export interface RC {
-  ai?: {
-    key?: string
-  }
+export interface Config {
+  preferredLanguage: Language
+  ai: AI
+}
+
+export interface AI {
+  accessKey: string | null
+  maxTokens: number
+  temperature: number
 }
 
 export type Language = 'fr' | 'en'
