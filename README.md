@@ -2,6 +2,9 @@
 
 **AI tools for writers**
 
+> Discover AI tools designed specifically for writers, including a spell check, description generator, and support for multiple languages. With features like OpenAI API integration and both a command line interface and VS Code extension, these tools are a must-have for any writer looking to enhance their writing process.
+> _Generating using Utils AI_
+
 ## Features
 
 - ✅ Spell Check
