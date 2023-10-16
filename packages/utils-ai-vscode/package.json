@@ -74,7 +74,7 @@
     "publish": "vsce publish --no-dependencies"
   },
   "dependencies": {
-    "utils-ai": "0.1.5"
+    "utils-ai": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^18.18.4",
