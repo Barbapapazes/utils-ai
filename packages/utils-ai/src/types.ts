@@ -5,7 +5,7 @@ export interface Config {
 
 export interface AI {
   accessKey: string | null
-  maxTokens: number
+  maxTokens: number | null
   temperature: number
 }
 

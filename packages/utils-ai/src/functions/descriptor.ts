@@ -20,7 +20,7 @@ export async function descriptor(text: string, prompt: string, options: Descript
   ])
 
   logger.debug(`Generating description`)
-  const completion = await fetchCompletion(messages, { ...options.ai, maxTokens: 4000 })
+  const completion = await fetchCompletion(messages, { ...options.ai, maxTokens: null })
   logger.debug(`Generated description`)
 
   const description = getFirstSuggestion(completion)
