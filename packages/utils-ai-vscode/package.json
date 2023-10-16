@@ -15,6 +15,7 @@
     "Other"
   ],
   "main": "./dist/index.js",
+  "icon": "./images/icon.png",
   "engines": {
     "vscode": "^1.83.0"
   },
