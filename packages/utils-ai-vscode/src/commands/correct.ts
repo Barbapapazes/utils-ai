@@ -17,7 +17,7 @@ export function correctCommand(context: vscode.ExtensionContext) {
         return
       }
 
-      const prompt = getPrompt('spell-checker', 'en')
+      const prompt = getPrompt('spell-checker-md', 'en')
       const filename = editor.document.fileName
       const text = editor.document.getText()
 

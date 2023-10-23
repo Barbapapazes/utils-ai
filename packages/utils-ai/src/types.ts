@@ -13,7 +13,8 @@ export type Language = 'fr' | 'en'
 
 export type Prompts = Record<Language, Record<PromptName, Prompt>>
 
-export type PromptName = 'spell-checker' | 'descriptor'
+export type PromptLanguage = 'md'
+export type PromptName = `spell-checker-${PromptLanguage}` | 'descriptor'
 
 export interface Prompt {
   name: string

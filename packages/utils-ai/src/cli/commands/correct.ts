@@ -62,7 +62,7 @@ export default defineCommand({
 
     const file = readFileSync(args.filename, 'utf-8')
 
-    const prompt = getPrompt('spell-checker', config.preferredLanguage)
+    const prompt = getPrompt('spell-checker-md', config.preferredLanguage)
 
     const correctedText = await correct(file, prompt.message, {
       ...config,
