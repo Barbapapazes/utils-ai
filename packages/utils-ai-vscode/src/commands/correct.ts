@@ -6,38 +6,52 @@ export function correctCommand(context: vscode.ExtensionContext) {
   const secrets = context.secrets
 
   return async () => {
+    const accessKey = await getOpenAIKey(secrets)
+
+    if (!accessKey) {
+      vscode.window.showErrorMessage('No key provided. Please provide a key using the "Add OpenAI Key" command.')
+      return
+    }
+
     const time = Date.now()
     const editor = vscode.window.activeTextEditor
 
     if (editor) {
-      const accessKey = await getOpenAIKey(secrets)
-
-      if (!accessKey) {
-        vscode.window.showErrorMessage('No key provided. Please provide a key using the "Add OpenAI Key" command.')
-        return
-      }
-
       const prompt = getPrompt('spell-checker-md', 'en')
       const filename = editor.document.fileName
-      const text = editor.document.getText()
+
+      const hasSelection = !editor.selection.isEmpty
+      const selection = editor.selection
+
+      // First, use the selection then the whole document
+      let text: string
+      if (hasSelection)
+        text = editor.document.getText(selection)
+      else
+        text = editor.document.getText()
 
       try {
-        // start a loading notification
+        const title = hasSelection ? `Correcting selection in ${filename}. Please wait...` : `Correcting text in ${filename}. Please wait...`
         await vscode.window.withProgress({
           location: vscode.ProgressLocation.Notification,
-          title: `Correcting ${filename}. Please wait...`,
+          title,
           cancellable: false,
         }, async () => {
           const correctedText = await correct(text, prompt.message, { ai: { accessKey } })
 
-          // replace the text with the corrected text
           editor.edit((editBuilder) => {
-            editBuilder.replace(new vscode.Range(0, 0, text.length, 0), correctedText)
+            const range: vscode.Range = hasSelection ? selection : new vscode.Range(0, 0, text.length, 0)
+
+            editBuilder.delete(range)
+            editBuilder.insert(range.start, correctedText)
           })
 
+          // Save the document
+          await editor.document.save()
+
           const duration = Date.now() - time
-          // show a success notification
-          vscode.window.showInformationMessage(`Corrected text in ${filename}`, {
+          const message = hasSelection ? `Selection corrected in ${filename}` : `Text corrected in ${filename}`
+          vscode.window.showInformationMessage(message, {
             detail: `Done in ${duration}ms.`,
           })
         })
