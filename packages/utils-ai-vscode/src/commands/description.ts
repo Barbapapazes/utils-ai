@@ -38,8 +38,9 @@ export function descriptionCommand(context: vscode.ExtensionContext) {
             editBuilder.replace(new vscode.Range(position, position), description)
           })
 
+          await editor.document.save()
+
           const duration = Date.now() - time
-          // show a success notification
           vscode.window.showInformationMessage(`Description generated from ${filename}`, {
             detail: `Done in ${duration}ms.`,
           })
