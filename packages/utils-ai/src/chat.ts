@@ -15,7 +15,7 @@ export async function fetchCompletion(messages: Message[], options: AI): Promise
     body: {
       model: 'gpt-3.5-turbo',
       messages,
-      max_tokens: options.maxTokens,
+      max_tokens: options.maxTokens ?? null,
     },
   })
 }

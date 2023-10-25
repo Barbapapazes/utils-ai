@@ -1,12 +1,12 @@
 export interface Config {
-  preferredLanguage: Language
+  preferredLanguage?: Language
   ai: AI
 }
 
 export interface AI {
   accessKey: string | null
-  maxTokens: number | null
-  temperature: number
+  maxTokens?: number
+  temperature?: number
 }
 
 export type Language = 'fr' | 'en'
