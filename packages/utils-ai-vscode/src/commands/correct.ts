@@ -17,8 +17,40 @@ export function correctCommand(context: vscode.ExtensionContext) {
     const editor = vscode.window.activeTextEditor
 
     if (editor) {
+      const editorFilename = editor.document.fileName // Full path to the file
+      const filename = editorFilename.split('/').pop()
+
+      // Commit current file to git before correcting. This is useful for tracking changes.
+      const gitExtension = vscode.extensions.getExtension('vscode.git')?.exports
+      const isActivated = gitExtension.enabled
+
+      if (!isActivated) {
+        vscode.window.showErrorMessage('Git is not activated. Please activate Git in VSCode.')
+        return
+      }
+
+      if (isActivated) {
+        const git = gitExtension.getAPI(1)
+
+        if (git.repositories.length > 0) {
+          const repository = git.repositories[0]
+
+          vscode.window.showInformationMessage(`Committing ${filename}...`)
+
+          // Save to be sure to commit the latest changes
+          await editor.document.save()
+
+          try {
+            await repository.add([editorFilename])
+            await repository.commit(`chore: save ${filename} before correcting`)
+          }
+          catch (error: any) {
+            // Ignore error because it's mean that the file is already committed
+          }
+        }
+      }
+
       const prompt = getPrompt('spell-checker-md', 'en')
-      const filename = editor.document.fileName
 
       const hasSelection = !editor.selection.isEmpty
       const selection = editor.selection
