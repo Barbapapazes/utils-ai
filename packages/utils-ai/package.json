@@ -2,7 +2,7 @@
   "name": "utils-ai",
   "type": "module",
   "version": "0.3.1",
-  "packageManager": "pnpm@8.9.2",
+  "packageManager": "pnpm@8.15.5",
   "description": "A CLI of AI Utils for writers",
   "author": "Estéban Soubiran <e.soubiran25@gmail.com> (https://github.com/barbapapazes/)",
   "license": "MIT",
