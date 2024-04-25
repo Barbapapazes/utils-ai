@@ -2,9 +2,13 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { defineCommand } from 'citty'
 import { mergeConfig } from '../config'
 import { mustBeMarkdown } from '../file'
-import { getPrompt } from '../../prompts'
-import { correct } from '../../functions'
-import type { Language } from '../../types'
+import { SimpleMessagesFactory } from '../../message_factory'
+import { SimpleTokenizer } from '../../tokenizer'
+import { SimpleSplitter } from '../../splitter'
+import { FetcherOptions, HttpFetcher } from '../../fetcher'
+import { Correcter, CorrecterOptions } from '../../features'
+import type { Language } from '../../prompter'
+import { Prompter, PrompterOptions } from '../../prompter'
 
 export default defineCommand({
   meta: {
@@ -46,6 +50,16 @@ export default defineCommand({
       required: false,
       description: '',
     },
+    endpoint: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
+    model: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
   },
   run: async ({ args }) => {
     mustBeMarkdown(args.filename)
@@ -55,19 +69,41 @@ export default defineCommand({
       ai: {
         accessKey: args.accessKey,
         // TODO: update when type number will be supported
-        maxTokens: args.maxTokens ? Number(args.maxTokens) : undefined,
+        maxTokens: args.maxTokens ? Number(args.maxTokens) : 1024,
         temperature: args.temperature ? Number(args.temperature) : undefined,
+        endpoint: args.endpoint,
+        model: args.model,
       },
     })
 
     const file = readFileSync(args.filename, 'utf-8')
 
-    const prompt = getPrompt('spell-checker-md', config.preferredLanguage)
+    const prompterOptions = new PrompterOptions(
+      config.preferredLanguage,
+    )
+    const prompter = new Prompter(prompterOptions)
+    const prompt = prompter.find('spell-checker-md')
 
-    const correctedText = await correct(file, prompt.message, {
-      ...config,
-      maxChunkSize: args.maxChunkSize ? Number(args.maxChunkSize) : undefined,
-    })
+    const messagesFactory = new SimpleMessagesFactory()
+
+    const tokenizer = new SimpleTokenizer()
+    const splitter = new SimpleSplitter(tokenizer)
+
+    const fetcherOptions = new FetcherOptions(
+      config.ai.endpoint,
+      config.ai.accessKey,
+      config.ai.model,
+      config.ai.maxTokens,
+    )
+    const fetcher = new HttpFetcher(fetcherOptions)
+
+    const correcterOption = new CorrecterOptions(
+      prompt.message,
+      config.ai.maxTokens,
+    )
+    const correcter = new Correcter(messagesFactory, tokenizer, splitter, fetcher, correcterOption)
+
+    const correctedText = await correcter.execute(file)
 
     writeFileSync(args.filename, correctedText, 'utf-8')
   },

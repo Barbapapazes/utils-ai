@@ -1,2 +1,2 @@
-export * from './correct'
+export * from './correcter'
 export * from './descriptor'

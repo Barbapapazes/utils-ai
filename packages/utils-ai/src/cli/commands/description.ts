@@ -2,9 +2,11 @@ import { readFileSync } from 'node:fs'
 import { defineCommand } from 'citty'
 import { mustBeMarkdown } from '../file'
 import { mergeConfig } from '../config'
-import { getPrompt } from '../../prompts'
-import type { Language } from '../../types'
-import { descriptor } from '../../functions'
+import { SimpleMessagesFactory } from '../../message_factory'
+import { FetcherOptions, HttpFetcher } from '../../fetcher'
+import { Descriptor, DescriptorOptions } from '../../features'
+import type { Language } from '../../prompter'
+import { Prompter, PrompterOptions } from '../../prompter'
 
 export default defineCommand({
   meta: {
@@ -42,6 +44,16 @@ export default defineCommand({
       required: false,
       description: '',
     },
+    endpoint: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
+    model: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
   },
   run: async ({ args }) => {
     mustBeMarkdown(args.filename)
@@ -53,14 +65,35 @@ export default defineCommand({
         // TODO: update when type number will be supported
         maxTokens: args.maxTokens ? Number(args.maxTokens) : undefined,
         temperature: args.temperature ? Number(args.temperature) : undefined,
+        endpoint: args.endpoint,
+        model: args.model,
       },
     })
 
     const file = readFileSync(args.filename, 'utf-8')
 
-    const prompt = getPrompt('descriptor', config.preferredLanguage)
+    const prompterOptions = new PrompterOptions(
+      config.preferredLanguage,
+    )
+    const prompter = new Prompter(prompterOptions)
+    const prompt = prompter.find('descriptor')
 
-    const description = await descriptor(file, prompt.message, config)
+    const messagesFactory = new SimpleMessagesFactory()
+
+    const fetcherOptions = new FetcherOptions(
+      config.ai.endpoint,
+      config.ai.accessKey,
+      config.ai.model,
+      config.ai.maxTokens,
+    )
+    const fetcher = new HttpFetcher(fetcherOptions)
+
+    const descriptorOptions = new DescriptorOptions(
+      prompt.message,
+    )
+    const descriptor = new Descriptor(messagesFactory, fetcher, descriptorOptions)
+
+    const description = await descriptor.execute(file)
 
     // TODO: copy description to clipboard
 

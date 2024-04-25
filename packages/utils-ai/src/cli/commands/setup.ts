@@ -2,7 +2,7 @@ import { defineCommand } from 'citty'
 import { updateUser } from 'rc9'
 import { configFilename } from '../config'
 import type { RC } from '../types'
-import type { Language } from '../../types'
+import type { Language } from '../../prompter'
 
 export default defineCommand({
   meta: {
@@ -33,6 +33,16 @@ export default defineCommand({
       required: false,
       description: 'Max tokens',
     },
+    endpoint: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
+    model: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
   },
   run: ({ args }) => {
     if (args.accessKey)
@@ -46,5 +56,11 @@ export default defineCommand({
 
     if (args.maxTokens)
       updateUser<RC>({ ai: { maxTokens: Number(args.maxTokens) } }, configFilename)
+
+    if (args.endpoint)
+      updateUser<RC>({ ai: { endpoint: args.endpoint } }, configFilename)
+
+    if (args.model)
+      updateUser<RC>({ ai: { model: args.model } }, configFilename)
   },
 })
