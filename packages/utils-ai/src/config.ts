@@ -14,5 +14,7 @@ export const defaultConfig = defineUtilsAIConfig<Config>({
     accessKey: null,
     maxTokens: 2048,
     temperature: 0.7,
+    endpoint: 'https://api.openai.com/v1/chat/completions',
+    model: 'gpt-3.5-turbo',
   },
 })

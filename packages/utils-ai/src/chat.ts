@@ -6,14 +6,14 @@ export function defineMessages(message: Message[]): Message[] {
 }
 
 export async function fetchCompletion(messages: Message[], options: AI): Promise<Completion> {
-  return ofetch<Completion>('https://api.openai.com/v1/chat/completions', {
+  return ofetch<Completion>(options.endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${options.accessKey}`,
     },
     body: {
-      model: 'gpt-3.5-turbo',
+      model: options.model,
       messages,
       max_tokens: options.maxTokens ?? null,
     },

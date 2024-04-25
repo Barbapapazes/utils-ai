@@ -7,6 +7,8 @@ export interface AI {
   accessKey: string | null
   maxTokens?: number
   temperature?: number
+  endpoint: string
+  model: string
 }
 
 export type Language = 'fr' | 'en'
