@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { correct, getPrompt } from 'utils-ai'
+import { Correcter, CorrecterOptions, FetcherOptions, HttpFetcher, Prompter, PrompterOptions, SimpleMessagesFactory, SimpleSplitter, SimpleTokenizer } from 'utils-ai'
 import { getOpenAIKey } from '../secrets'
 
 export function correctCommand(context: vscode.ExtensionContext) {
@@ -50,7 +50,13 @@ export function correctCommand(context: vscode.ExtensionContext) {
         }
       }
 
-      const prompt = getPrompt('spell-checker-md', 'en')
+      // TODO: use the preferred language from the settings
+      const prompterOptions = new PrompterOptions(
+        'en',
+      )
+      const prompter = new Prompter(prompterOptions)
+      // TODO: support mdx
+      const prompt = await prompter.find('spell-checker-md')
 
       const hasSelection = !editor.selection.isEmpty
       const selection = editor.selection
@@ -69,7 +75,27 @@ export function correctCommand(context: vscode.ExtensionContext) {
           title,
           cancellable: false,
         }, async () => {
-          const correctedText = await correct(text, prompt.message, { ai: { accessKey } })
+          const messagesFactory = new SimpleMessagesFactory()
+
+          const tokenizer = new SimpleTokenizer()
+          const splitter = new SimpleSplitter(tokenizer)
+
+          // TODO: use from the settings
+          const fetcherOptions = new FetcherOptions(
+            'https://api.openai.com/v1/chat/completions',
+            accessKey,
+            'gpt-3.5-turbo',
+            1024,
+          )
+          const fetcher = new HttpFetcher(fetcherOptions)
+
+          const correcterOption = new CorrecterOptions(
+            prompt.message,
+            1024,
+          )
+          const corrector = new Correcter(messagesFactory, tokenizer, splitter, fetcher, correcterOption)
+
+          const correctedText = await corrector.execute(text)
 
           editor.edit((editBuilder) => {
             const range: vscode.Range = hasSelection ? selection : new vscode.Range(0, 0, text.length, 0)

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { descriptor, getPrompt } from 'utils-ai'
+import { Descriptor, DescriptorOptions, FetcherOptions, HttpFetcher, Prompter, PrompterOptions, SimpleMessagesFactory } from 'utils-ai'
 import { getOpenAIKey } from '../secrets'
 
 export function descriptionCommand(context: vscode.ExtensionContext) {
@@ -9,7 +9,7 @@ export function descriptionCommand(context: vscode.ExtensionContext) {
     const time = Date.now()
     const editor = vscode.window.activeTextEditor
 
-    // could create from selection, and if no selection, from the whole document (if file is too big, add a warning message)
+    // TODO: could create from selection, and if no selection, from the whole document (if file is too big, add a warning message)
 
     if (editor) {
       const accessKey = await getOpenAIKey(secrets)
@@ -19,7 +19,13 @@ export function descriptionCommand(context: vscode.ExtensionContext) {
         return
       }
 
-      const prompt = getPrompt('descriptor', 'en')
+      // TODO: use the preferred language from the settings
+      const prompterOptions = new PrompterOptions(
+        'en',
+      )
+      const prompter = new Prompter(prompterOptions)
+      const prompt = prompter.find('descriptor')
+
       const filename = editor.document.fileName
       const text = editor.document.getText()
 
@@ -30,7 +36,24 @@ export function descriptionCommand(context: vscode.ExtensionContext) {
           title: 'Utils AI: Generating description',
           cancellable: false,
         }, async () => {
-          const description = await descriptor(text, prompt.message, { ai: { accessKey } })
+          const messagesFactory = new SimpleMessagesFactory()
+
+          // TODO: use from the settings
+          const fetcherOptions = new FetcherOptions(
+            'https://api.openai.com/v1/chat/completions',
+            accessKey,
+            'gpt-3.5-turbo',
+            1024,
+          )
+          const fetcher = new HttpFetcher(fetcherOptions)
+
+          const descriptorOptions = new DescriptorOptions(prompt.message)
+          const descriptor = new Descriptor(
+            messagesFactory,
+            fetcher,
+            descriptorOptions,
+          )
+          const description = await descriptor.execute(text)
 
           const position = editor.selection.active
           // replace the text with the description
