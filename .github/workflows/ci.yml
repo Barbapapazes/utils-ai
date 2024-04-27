@@ -28,7 +28,7 @@ jobs:
         run: pnpm run lint
 
   test:
-    name: test
+    name: Test
     runs-on: ubuntu-latest
 
     steps:
