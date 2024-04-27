@@ -10,7 +10,8 @@
     "release": "bumpp -r",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "pnpm run --filter utils-ai build && pnpm run --filter utils-ai-vscode build"
+    "build": "pnpm run --filter utils-ai build && pnpm run --filter utils-ai-vscode build",
+    "test": "pnpm run -r test"
   },
   "devDependencies": {
     "@antfu/eslint-config": "1.0.0-beta.28",
