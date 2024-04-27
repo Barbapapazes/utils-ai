@@ -1,14 +1,14 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { defineCommand } from 'citty'
-import { mergeConfig } from '../config'
-import { mustBeMarkdown } from '../file'
-import { SimpleMessagesFactory } from '../../message_factory'
-import { SimpleTokenizer } from '../../tokenizer'
-import { SimpleSplitter } from '../../splitter'
-import { FetcherOptions, HttpFetcher } from '../../fetcher'
-import { Correcter, CorrecterOptions } from '../../features'
-import type { Language } from '../../prompter'
-import { Prompter, PrompterOptions } from '../../prompter'
+import { mergeConfig } from '../config.js'
+import { mustBeMarkdown } from '../file.js'
+import { SimpleMessagesFactory } from '../../message_factory.js'
+import { SimpleTokenizer } from '../../tokenizer.js'
+import { SimpleSplitter } from '../../splitter.js'
+import { FetcherOptions, HttpFetcher } from '../../fetcher.js'
+import { Correcter, CorrecterOptions } from '../../features/correcter.js'
+import type { Language } from '../../prompter.js'
+import { Prompter, PrompterOptions } from '../../prompter.js'
 
 export default defineCommand({
   meta: {
@@ -21,31 +21,13 @@ export default defineCommand({
       required: true,
       description: 'File to correct',
     },
-    // TODO: use number
-    maxChunkSize: {
-      type: 'string',
-      required: false,
-      description: '',
-    },
     // TODO: use enum https://github.com/unjs/citty/pull/83
     language: {
       type: 'string',
       required: false,
       description: 'Language of the file',
     },
-    // TODO: use number
-    maxTokens: {
-      type: 'string',
-      required: false,
-      description: '',
-    },
-    // TODO: use number
-    temperature: {
-      type: 'string',
-      required: false,
-      description: '',
-    },
-    accessKey: {
+    authToken: {
       type: 'string',
       required: false,
       description: '',
@@ -60,6 +42,24 @@ export default defineCommand({
       required: false,
       description: '',
     },
+    // TODO: use number
+    contextWindow: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
+    // TODO: use number
+    outputTokens: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
+    // TODO: use number
+    temperature: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
   },
   run: async ({ args }) => {
     mustBeMarkdown(args.filename)
@@ -67,12 +67,12 @@ export default defineCommand({
     const config = mergeConfig({
       preferredLanguage: args.language as Language,
       ai: {
-        accessKey: args.accessKey,
-        // TODO: update when type number will be supported
-        maxTokens: args.maxTokens ? Number(args.maxTokens) : 1024,
-        temperature: args.temperature ? Number(args.temperature) : undefined,
+        authToken: args.authToken,
         endpoint: args.endpoint,
         model: args.model,
+        contextWindow: toNumber(args.contextWindow),
+        outputTokens: toNumber(args.outputTokens),
+        temperature: toNumber(args.temperature),
       },
     })
 
@@ -90,16 +90,18 @@ export default defineCommand({
     const splitter = new SimpleSplitter(tokenizer)
 
     const fetcherOptions = new FetcherOptions(
+      config.ai.authToken,
       config.ai.endpoint,
-      config.ai.accessKey,
       config.ai.model,
-      config.ai.maxTokens,
     )
     const fetcher = new HttpFetcher(fetcherOptions)
 
     const correcterOption = new CorrecterOptions(
       prompt.message,
-      config.ai.maxTokens,
+      /**
+       * Correct command will return the same amount of tokens as the input the the chunk size must be the smaller between the smaller (`outputTokens` is always smaller than the `contextWindow`.
+       */
+      config.ai.outputTokens,
     )
     const correcter = new Correcter(messagesFactory, tokenizer, splitter, fetcher, correcterOption)
 
@@ -108,3 +110,7 @@ export default defineCommand({
     writeFileSync(args.filename, correctedText, 'utf-8')
   },
 })
+
+function toNumber(value: string | undefined): number | undefined {
+  return value ? Number(value) : undefined
+}

@@ -1,15 +1,31 @@
 import * as vscode from 'vscode'
 import { Correcter, CorrecterOptions, FetcherOptions, HttpFetcher, Prompter, PrompterOptions, SimpleMessagesFactory, SimpleSplitter, SimpleTokenizer } from 'utils-ai'
-import { getOpenAIKey } from '../secrets'
+import { Configurator } from '../configuration.js'
+import { Logger } from '../logger.js'
+import { SecretsStorage } from '../secrets_storage.js'
 
 export function correctCommand(context: vscode.ExtensionContext) {
-  const secrets = context.secrets
+  const logger = new Logger(
+    vscode.window,
+  )
+
+  const secretsStorage = new SecretsStorage(
+    context.secrets,
+  )
 
   return async () => {
-    const accessKey = await getOpenAIKey(secrets)
+    logger.log('Correct command called.')
 
-    if (!accessKey) {
-      vscode.window.showErrorMessage('No key provided. Please provide a key using the "Add OpenAI Key" command.')
+    const configurator = new Configurator(
+      vscode.workspace,
+    )
+
+    const authToken = await secretsStorage.getAuthToken()
+
+    if (!authToken) {
+      const message = 'No authorization token provided. Please provide an authorization token using the "Add Auth Token" command.'
+      logger.log(message)
+      vscode.window.showErrorMessage(message)
       return
     }
 
@@ -18,6 +34,7 @@ export function correctCommand(context: vscode.ExtensionContext) {
 
     if (editor) {
       const editorFilename = editor.document.fileName // Full path to the file
+      logger.log(`File used: ${editorFilename}`)
       const filename = editorFilename.split('/').pop()
 
       // Commit current file to git before correcting. This is useful for tracking changes.
@@ -25,7 +42,9 @@ export function correctCommand(context: vscode.ExtensionContext) {
       const isActivated = gitExtension.enabled
 
       if (!isActivated) {
-        vscode.window.showErrorMessage('Git is not activated. Please activate Git in VSCode.')
+        const message = 'Git is not activated. Please activate Git in VSCode.'
+        logger.log(message)
+        vscode.window.showErrorMessage(message)
         return
       }
 
@@ -35,6 +54,7 @@ export function correctCommand(context: vscode.ExtensionContext) {
         if (git.repositories.length > 0) {
           const repository = git.repositories[0]
 
+          logger.log(`Committing ${filename}...`)
           vscode.window.showInformationMessage(`Committing ${filename}...`)
 
           // Save to be sure to commit the latest changes
@@ -45,18 +65,18 @@ export function correctCommand(context: vscode.ExtensionContext) {
             await repository.commit(`chore: save ${filename} before correcting`)
           }
           catch (error: any) {
+            logger.log('No changes to commit.')
             // Ignore error because it's mean that the file is already committed
           }
         }
       }
 
-      // TODO: use the preferred language from the settings
       const prompterOptions = new PrompterOptions(
-        'en',
+        configurator.preferredLanguage,
       )
       const prompter = new Prompter(prompterOptions)
       // TODO: support mdx
-      const prompt = await prompter.find('spell-checker-md')
+      const prompt = prompter.find('spell-checker-md')
 
       const hasSelection = !editor.selection.isEmpty
       const selection = editor.selection
@@ -80,21 +100,22 @@ export function correctCommand(context: vscode.ExtensionContext) {
           const tokenizer = new SimpleTokenizer()
           const splitter = new SimpleSplitter(tokenizer)
 
-          // TODO: use from the settings
           const fetcherOptions = new FetcherOptions(
-            'https://api.openai.com/v1/chat/completions',
-            accessKey,
-            'gpt-3.5-turbo',
-            1024,
+            authToken,
+            configurator.endpoint,
+            configurator.model,
           )
           const fetcher = new HttpFetcher(fetcherOptions)
 
           const correcterOption = new CorrecterOptions(
             prompt.message,
-            1024,
+            // Smaller than the context window.
+            configurator.outputTokens,
           )
           const corrector = new Correcter(messagesFactory, tokenizer, splitter, fetcher, correcterOption)
 
+          logger.log(`Correcting ${hasSelection ? 'selection' : 'selection'} with prompt: ${prompt.message}`)
+          logger.log(`Output tokens: ${configurator.outputTokens}`)
           const correctedText = await corrector.execute(text)
 
           editor.edit((editBuilder) => {
@@ -112,9 +133,11 @@ export function correctCommand(context: vscode.ExtensionContext) {
           vscode.window.showInformationMessage(message, {
             detail: `Done in ${duration}ms.`,
           })
+          logger.log(`Correction done in ${duration}ms.`)
         })
       }
       catch (error: any) {
+        logger.log(error.message)
         vscode.window.showErrorMessage(error.message)
       }
     }

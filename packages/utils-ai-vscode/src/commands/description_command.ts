@@ -1,32 +1,47 @@
 import * as vscode from 'vscode'
 import { Descriptor, DescriptorOptions, FetcherOptions, HttpFetcher, Prompter, PrompterOptions, SimpleMessagesFactory } from 'utils-ai'
-import { getOpenAIKey } from '../secrets'
+import { Logger } from '../logger.js'
+import { Configurator } from '../configuration.js'
+import { SecretsStorage } from '../secrets_storage.js'
 
 export function descriptionCommand(context: vscode.ExtensionContext) {
-  const secrets = context.secrets
+  const logger = new Logger(
+    vscode.window,
+  )
 
+  const secretsStorage = new SecretsStorage(
+    context.secrets
+  )
   return async () => {
+    logger.log('Description command called.')
+
+    const configurator = new Configurator(
+      vscode.workspace,
+    )
+
     const time = Date.now()
     const editor = vscode.window.activeTextEditor
 
     // TODO: could create from selection, and if no selection, from the whole document (if file is too big, add a warning message)
 
     if (editor) {
-      const accessKey = await getOpenAIKey(secrets)
+      const authToken = await secretsStorage.getAuthToken()
 
-      if (!accessKey) {
-        vscode.window.showErrorMessage('No key provided. Please provide a key using the "Add OpenAI Key" command.')
+      if (!authToken) {
+        const message = 'No authorization token provided. Please provide an authorization token using the "Add Auth Token" command.'
+        logger.log(message)
+        vscode.window.showErrorMessage(message)
         return
       }
 
-      // TODO: use the preferred language from the settings
       const prompterOptions = new PrompterOptions(
-        'en',
+        configurator.preferredLanguage,
       )
       const prompter = new Prompter(prompterOptions)
       const prompt = prompter.find('descriptor')
 
       const filename = editor.document.fileName
+      logger.log(`File used: ${filename}`)
       const text = editor.document.getText()
 
       try {
@@ -38,12 +53,11 @@ export function descriptionCommand(context: vscode.ExtensionContext) {
         }, async () => {
           const messagesFactory = new SimpleMessagesFactory()
 
-          // TODO: use from the settings
+          logger.log(`Generating description with prompt: ${prompt.message}`)
           const fetcherOptions = new FetcherOptions(
-            'https://api.openai.com/v1/chat/completions',
-            accessKey,
-            'gpt-3.5-turbo',
-            1024,
+            authToken,
+            configurator.endpoint,
+            configurator.model,
           )
           const fetcher = new HttpFetcher(fetcherOptions)
 
@@ -67,9 +81,11 @@ export function descriptionCommand(context: vscode.ExtensionContext) {
           vscode.window.showInformationMessage(`Description generated from ${filename}`, {
             detail: `Done in ${duration}ms.`,
           })
+          logger.log(`Description generated in ${duration}ms.`)
         })
       }
       catch (error: any) {
+        logger.log(error.message)
         vscode.window.showErrorMessage(error.message)
       }
     }

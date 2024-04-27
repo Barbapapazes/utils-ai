@@ -1,22 +1,38 @@
 {
+
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "lib": [
+      "ESNext"
+    ],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "rootDir": "./",
+    "module": "NodeNext",
     "resolveJsonModule": true,
     "types": [
-      "node"
+      "@types/node"
     ],
-    "allowJs": true,
-    "strict": true,
+
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
     "noImplicitAny": true,
+    "noImplicitThis": true,
     "noUnusedLocals": true,
-    "noEmit": true,
+    "noUnusedParameters": true,
+    "declaration": true,
+    "outDir": "./build",
+    "removeComments": true,
+    "sourceMap": false,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     "skipLibCheck": true
   },
-  "include": [
-    "src"
-  ]
+  "ts-node": {
+    "swc": true
+  }
 }

@@ -8,6 +8,6 @@ export interface Tokenizer {
 
 export class SimpleTokenizer implements Tokenizer {
   count(text: string): number {
-    return text.length / 4
+    return Math.ceil(text.length / 4)
   }
 }

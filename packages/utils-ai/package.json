@@ -7,47 +7,64 @@
   "author": "Estéban Soubiran <e.soubiran25@gmail.com> (https://github.com/barbapapazes/)",
   "license": "MIT",
   "homepage": "https://github.com/barbapapazes/utils-ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barbapapazes/utils-ai.git",
+    "directory": "packages/utils-ai"
+  },
+  "bugs": {
+    "url": "https://github.com/barbapapazes/utils-ai/issues"
+  },
   "keywords": [
     "utils",
     "ai",
     "cli"
   ],
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.mts",
-        "default": "./dist/index.mjs"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
-    }
+    ".": "./build/index.js"
   },
-  "main": "./dist/index.cjs",
-  "types": "./dist/index.d.ts",
-  "bin": "./bin/index.mjs",
+  "main": "build/index.js",
+  "bin": "./build/bin/run.js",
   "files": [
-    "bin",
-    "dist"
+    "!build/bin/test.js",
+    "build/bin",
+    "build/commands",
+    "build/index.d.ts",
+    "build/index.js",
+    "build/src"
   ],
   "scripts": {
-    "build": "unbuild",
-    "build:stub": "unbuild --stub",
-    "start": "node bin/index.mjs",
-    "prepublishOnly": "pnpm run build"
+    "clean": "del-cli build",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "prepublishOnly": "pnpm run build",
+    "test": "c8 node --loader ts-node/esm --enable-source-maps bin/test.ts"
   },
   "dependencies": {
     "citty": "^0.1.4",
-    "consola": "^3.2.3",
     "defu": "^6.1.2",
-    "ofetch": "^1.3.3",
     "rc9": "^2.1.1"
   },
   "devDependencies": {
+    "@japa/assert": "^3.0.0",
+    "@japa/runner": "^3.1.4",
+    "@swc/core": "^1.5.0",
     "@types/node": "^20.8.7",
+    "c8": "^9.1.0",
+    "del-cli": "^5.1.0",
     "jiti": "^1.20.0",
-    "typescript": "^5.2.2",
-    "unbuild": "^2.0.0"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.2.2"
+  },
+  "c8": {
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "tests/**",
+      "tmp/**",
+      "bin/**"
+    ]
   }
 }

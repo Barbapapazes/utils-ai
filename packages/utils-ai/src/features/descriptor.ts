@@ -1,6 +1,6 @@
-import debug from '../debug'
-import type { Fetcher } from '../fetcher'
-import type { MessagesFactory } from '../message_factory'
+import debug from '../debug.js'
+import type { Fetcher } from '../fetcher.js'
+import type { MessagesFactory } from '../message_factory.js'
 
 export class DescriptorOptions {
   constructor(

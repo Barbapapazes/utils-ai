@@ -1,4 +1,5 @@
-import type { Message } from './message_factory'
+import type { Message } from './message_factory.js'
+import type { AuthToken, Endpoint, Model } from './types.js'
 
 export interface Completion {
   id: string
@@ -19,10 +20,9 @@ export interface Fetcher {
 
 export class FetcherOptions {
   constructor(
-    public endpoint: string,
-    public accessKey: string,
-    public model: string,
-    public maxTokens?: number,
+    public authToken: AuthToken,
+    public endpoint: Endpoint,
+    public model: Model,
   ) {}
 }
 
@@ -48,11 +48,10 @@ export class HttpFetcher implements Fetcher {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.options.accessKey}`,
+        'Authorization': `Bearer ${this.options.authToken}`,
       },
       body: JSON.stringify({
         model: this.options.model,
-        max_tokens: this.options.maxTokens,
         ...body,
       }),
     })

@@ -1,10 +1,10 @@
-import type { Tokenizer } from './tokenizer'
+import type { Tokenizer } from './tokenizer.js'
 
 export interface Splitter {
   /**
    * Split the text into chunks
    * @param text Text to split
-   * @param maxChunkSize Maximal size of the chunk
+   * @param maxChunkSize Maximal size of the chunk (in tokens)
    */
   split(text: string, maxChunkSize: number): string[]
 }

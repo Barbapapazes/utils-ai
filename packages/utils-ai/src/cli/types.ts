@@ -1,4 +1,5 @@
-import type { Language } from '../prompter'
+import type { Language } from '../prompter.js'
+import type { AuthToken, Endpoint, Model } from '../types.js'
 
 export interface Config {
   preferredLanguage: Language
@@ -6,11 +7,18 @@ export interface Config {
 }
 
 export interface AI {
-  accessKey: string
-  maxTokens: number
+  authToken: AuthToken
+  endpoint: Endpoint
+  model: Model
+  /**
+   * Context window of the model.
+   */
+  contextWindow: number
+  /**
+   * Maximum number of tokens that the model can generate.
+   */
+  outputTokens: number
   temperature: number
-  endpoint: string
-  model: string
 
 }
 

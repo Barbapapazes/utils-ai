@@ -1,8 +1,8 @@
-import debug from '../debug'
-import type { Fetcher } from '../fetcher'
-import type { MessagesFactory } from '../message_factory'
-import type { Splitter } from '../splitter'
-import type { Tokenizer } from '../tokenizer'
+import debug from '../debug.js'
+import type { Fetcher } from '../fetcher.js'
+import type { MessagesFactory } from '../message_factory.js'
+import type { Splitter } from '../splitter.js'
+import type { Tokenizer } from '../tokenizer.js'
 
 export class CorrecterOptions {
   constructor(
