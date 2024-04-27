@@ -10,7 +10,7 @@ export function descriptionCommand(context: vscode.ExtensionContext) {
   )
 
   const secretsStorage = new SecretsStorage(
-    context.secrets
+    context.secrets,
   )
   return async () => {
     logger.log('Description command called.')
