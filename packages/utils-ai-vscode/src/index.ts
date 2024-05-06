@@ -1,42 +1,40 @@
 import * as vscode from 'vscode'
-import { addOpenAIKey, removeOpenAIKey } from './secrets'
-import { descriptionCommand } from './commands/description'
-import { correctCommand } from './commands/correct'
+import { descriptionCommand } from './commands/description_command.js'
+import { correctCommand } from './commands/correct_command.js'
+import { saveAuthTokenCommand } from './commands/save_auth_token_command.js'
+import { deleteAuthTokenCommand } from './commands/delete_auth_token_command.js'
+import { SecretsStorage } from './secrets_storage.js'
+import { Configurator } from './configurator.js'
 
 export function activate(context: vscode.ExtensionContext) {
-  const secrets = context.secrets
+  /**
+   * Set context for the `package.json` because it's an array and using `config.` will interpret as a string.
+   */
+  const configuration = new Configurator(vscode.workspace)
+  vscode.commands.executeCommand('setContext', 'barbapapazes.utils-ai-vscode.supportedExtensions', configuration.supportedExtensions)
 
-  const addOpenAIKeyCommand = vscode.commands.registerCommand('barbapapazes.utils-ai-vscode.addOpenAIKey', async () => {
-    const key = await vscode.window.showInputBox({
-      prompt: 'Enter your OpenAI API key',
-      placeHolder: 'OpenAI API key',
-      password: true,
-    })
+  /**
+   * Configuration commands
+   */
+  const saveAuthTokenDisposable = vscode.commands.registerCommand('barbapapazes.utils-ai-vscode.addAuthToken', saveAuthTokenCommand(context))
+  const deleteAuthTokenDisposable = vscode.commands.registerCommand('barbapapazes.utils-ai-vscode.deleteAuthToken', deleteAuthTokenCommand(context))
 
-    if (!key) {
-      vscode.window.showErrorMessage('No key provided. Please try again.')
-      return
-    }
+  /**
+   * AI commands
+   */
+  const correctDisposable = vscode.commands.registerCommand('barbapapazes.utils-ai-vscode.correct', correctCommand(context))
+  const descriptionDisposable = vscode.commands.registerCommand('barbapapazes.utils-ai-vscode.description', descriptionCommand(context))
 
-    await addOpenAIKey(key, secrets)
-
-    vscode.window.showInformationMessage('OpenAI key added.')
-  })
-
-  const removeOpenAIKeyCommand = vscode.commands.registerCommand('barbapapazes.utils-ai-vscode.removeOpenAIKey', async () => {
-    await removeOpenAIKey(secrets)
-
-    vscode.window.showInformationMessage('OpenAI key removed.')
-  })
-
-  const correctCommandDisposable = vscode.commands.registerCommand('barbapapazes.utils-ai-vscode.correct', correctCommand(context))
-  const descriptionCommandDisposable = vscode.commands.registerCommand('barbapapazes.utils-ai-vscode.description', descriptionCommand(context))
-
-  context.subscriptions.push(addOpenAIKeyCommand, removeOpenAIKeyCommand, correctCommandDisposable, descriptionCommandDisposable)
+  /**
+   * Register commands
+   */
+  context.subscriptions.push(saveAuthTokenDisposable, deleteAuthTokenDisposable, correctDisposable, descriptionDisposable)
 }
 
 export async function deactivate(context: vscode.ExtensionContext) {
-  const secrets = context.secrets
+  const secretsStorage = new SecretsStorage(
+    context.secrets,
+  )
 
-  await removeOpenAIKey(secrets)
+  await secretsStorage.deleteAuthToken()
 }

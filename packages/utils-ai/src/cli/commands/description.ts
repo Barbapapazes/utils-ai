@@ -1,10 +1,12 @@
 import { readFileSync } from 'node:fs'
 import { defineCommand } from 'citty'
-import { mustBeMarkdown } from '../file'
-import { mergeConfig } from '../config'
-import { getPrompt } from '../../prompts'
-import type { Language } from '../../types'
-import { descriptor } from '../../functions'
+import { mustBeMarkdown } from '../file.js'
+import { mergeConfig } from '../config.js'
+import { SimpleMessagesFactory } from '../../message_factory.js'
+import { FetcherOptions, HttpFetcher } from '../../fetcher.js'
+import { Descriptor, DescriptorOptions } from '../../features/descriptor.js'
+import type { Language } from '../../prompter.js'
+import { Prompter, PrompterOptions } from '../../prompter.js'
 
 export default defineCommand({
   meta: {
@@ -24,20 +26,35 @@ export default defineCommand({
       description: 'Language of the file',
       default: 'en',
     },
-    // TODO: make the 3 next arguments sharable between command since they are related to every command
-    // TODO: use number
-    maxTokens: {
+    authToken: {
       type: 'string',
       required: false,
       description: '',
     },
-    // TODO: use number
+    endpoint: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
+    model: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
+    // TODO: Update to number
+    contextWindow: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
+    // TODO: Update to number
+    outputTokens: {
+      type: 'string',
+      required: false,
+      description: '',
+    },
+    // TODO: Update to number
     temperature: {
-      type: 'string',
-      required: false,
-      description: '',
-    },
-    accessKey: {
       type: 'string',
       required: false,
       description: '',
@@ -49,18 +66,38 @@ export default defineCommand({
     const config = mergeConfig({
       preferredLanguage: args.language as Language,
       ai: {
-        accessKey: args.accessKey,
-        // TODO: update when type number will be supported
-        maxTokens: args.maxTokens ? Number(args.maxTokens) : undefined,
-        temperature: args.temperature ? Number(args.temperature) : undefined,
+        authToken: args.authToken,
+        endpoint: args.endpoint,
+        model: args.model,
+        contextWindow: toNumber(args.contextWindow),
+        outputTokens: toNumber(args.outputTokens),
+        temperature: toNumber(args.temperature),
       },
     })
 
     const file = readFileSync(args.filename, 'utf-8')
 
-    const prompt = getPrompt('descriptor', config.preferredLanguage)
+    const prompterOptions = new PrompterOptions(
+      config.preferredLanguage,
+    )
+    const prompter = new Prompter(prompterOptions)
+    const prompt = prompter.find('descriptor')
 
-    const description = await descriptor(file, prompt.message, config)
+    const messagesFactory = new SimpleMessagesFactory()
+
+    const fetcherOptions = new FetcherOptions(
+      config.ai.authToken,
+      config.ai.endpoint,
+      config.ai.model,
+    )
+    const fetcher = new HttpFetcher(fetcherOptions)
+
+    const descriptorOptions = new DescriptorOptions(
+      prompt.message,
+    )
+    const descriptor = new Descriptor(messagesFactory, fetcher, descriptorOptions)
+
+    const description = await descriptor.execute(file)
 
     // TODO: copy description to clipboard
 
@@ -68,3 +105,7 @@ export default defineCommand({
     console.log(description)
   },
 })
+
+function toNumber(value: string | undefined): number | undefined {
+  return value ? Number(value) : undefined
+}

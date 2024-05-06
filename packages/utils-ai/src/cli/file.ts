@@ -4,5 +4,5 @@ export function isMarkdown(filename: string): boolean {
 
 export function mustBeMarkdown(filename: string) {
   if (!isMarkdown(filename))
-    throw new Error('Filename must finished by \'.md')
+    throw new Error('Filename must finish by \'.md')
 }

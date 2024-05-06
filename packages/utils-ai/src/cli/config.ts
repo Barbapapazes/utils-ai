@@ -1,11 +1,21 @@
 import { readUser } from 'rc9'
 import { defu } from 'defu'
-import type { DeepPartial } from '../config'
-import { defaultConfig } from '../config'
-import type { Config } from '../types'
-import type { RC } from './types'
+import type { AuthToken, Endpoint, Model } from '../types.js'
+import type { Config, DeepPartial, RC } from './types.js'
 
 export const configFilename = '.utils-ai.conf'
+
+export const defaultConfig: Config = {
+  preferredLanguage: 'en',
+  ai: {
+    authToken: '' as AuthToken,
+    endpoint: 'https://api.openai.com/v1/chat/completions' as Endpoint,
+    model: 'gpt-3.5-turbo' as Model,
+    contextWindow: 16_385,
+    outputTokens: 4_096,
+    temperature: 0.7,
+  },
+}
 
 export function getUserConfig(): RC {
   return readUser<RC>(configFilename)

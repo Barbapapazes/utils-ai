@@ -4,8 +4,9 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "path": "packages/utils-ai-vscode",
       "type": "npm",
-      "script": "ext:dev",
+      "script": "dev",
       "isBackground": true,
       "presentation": {
         "reveal": "never"

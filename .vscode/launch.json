@@ -12,7 +12,7 @@
       "outFiles": [
         "${workspaceFolder}/packages/utils-ai-vscode/dist/**/*.js"
       ],
-      "preLaunchTask": "npm: ext:dev"
+      "preLaunchTask": "npm: dev"
     }
   ]
 }
