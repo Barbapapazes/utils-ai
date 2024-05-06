@@ -52,8 +52,7 @@
           "default": "en",
           "enum": [
             "en",
-            "fr",
-            "custom"
+            "fr"
           ],
           "enumDescriptions": [
             "Select English Prompt",
@@ -69,19 +68,69 @@
           "type": "object",
           "properties": {
             "fr": {
-              "type": "string",
-              "markdownDescription": "Prompts to use for the AI. The key is the language and the value is the prompt."
+              "type": "object",
+              "properties": {
+                "spell-checker": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "markdownDescription": "Prompt to use for the name of the spell checker."
+                    },
+                    "message": {
+                      "type": "string",
+                      "markdownDescription": "Prompt to use for the text of the spell checker."
+                    }
+                  }
+                },
+                "descriptor": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "markdownDescription": "Prompt to use for the name of the descriptor."
+                    },
+                    "message": {
+                      "type": "string",
+                      "markdownDescription": "Prompt to use for the text of the spell descriptor."
+                    }
+                  }
+                }
+              }
             },
             "en": {
-              "type": "string",
-              "markdownDescription": "Prompts to use for the AI. The key is the language and the value is the prompt."
+              "type": "object",
+              "properties": {
+                "spell-checker": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "markdownDescription": "Prompt to use for the name of the spell checker."
+                    },
+                    "message": {
+                      "type": "string",
+                      "markdownDescription": "Prompt to use for the text of the spell checker."
+                    }
+                  }
+                },
+                "descriptor": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "markdownDescription": "Prompt to use for the name of the descriptor."
+                    },
+                    "message": {
+                      "type": "string",
+                      "markdownDescription": "Prompt to use for the text of the spell descriptor."
+                    }
+                  }
+                }
+              }
             },
-            "custom": {
-              "type": "string",
-              "markdownDescription": "Prompts to use for the AI. The key is the language and the value is the prompt."
-            }
-          },
-          "markdownDescription": "Prompts to use for the AI. The key is the language and the value is the prompt."
+            "markdownDescription": "Prompts to use for the AI. The key is the language and the value is the prompt."
+          }
         },
         "utilsAi.supportedExtensions": {
           "definitions": "Supported extensions to allow the commands to be shown.",
@@ -150,6 +199,7 @@
     "publish": "vsce publish --no-dependencies"
   },
   "dependencies": {
+    "defu": "^6.1.2",
     "utils-ai": "workspace:*"
   },
   "devDependencies": {

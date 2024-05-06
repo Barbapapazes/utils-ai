@@ -4,7 +4,7 @@ import { correctCommand } from './commands/correct_command.js'
 import { saveAuthTokenCommand } from './commands/save_auth_token_command.js'
 import { deleteAuthTokenCommand } from './commands/delete_auth_token_command.js'
 import { SecretsStorage } from './secrets_storage.js'
-import { Configurator } from './configuration.js'
+import { Configurator } from './configurator.js'
 
 export function activate(context: vscode.ExtensionContext) {
   /**

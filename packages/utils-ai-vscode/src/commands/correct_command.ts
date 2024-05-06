@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
+import type { Language } from 'utils-ai'
 import { Correcter, CorrecterOptions, FetcherOptions, HttpFetcher, Prompter, PrompterOptions, SimpleMessagesFactory, SimpleSplitter, SimpleTokenizer } from 'utils-ai'
-import { Configurator } from '../configuration.js'
+import { Configurator } from '../configurator.js'
 import { Logger } from '../logger.js'
 import { SecretsStorage } from '../secrets_storage.js'
 
@@ -28,6 +29,10 @@ export function correctCommand(context: vscode.ExtensionContext) {
       vscode.window.showErrorMessage(message)
       return
     }
+
+    const preferredLanguage = configurator.alwaysAskLanguage
+      ? await vscode.window.showQuickPick(Prompter.LANGUAGES) as Language | undefined || configurator.preferredLanguage
+      : configurator.preferredLanguage
 
     const time = Date.now()
     const editor = vscode.window.activeTextEditor
@@ -72,11 +77,11 @@ export function correctCommand(context: vscode.ExtensionContext) {
       }
 
       const prompterOptions = new PrompterOptions(
-        configurator.preferredLanguage,
+        preferredLanguage,
       )
       const prompter = new Prompter(prompterOptions)
-      // TODO: support mdx
-      const prompt = prompter.find('spell-checker-md')
+      prompter.merge(configurator.prompts)
+      const prompt = prompter.find('spell-checker')
 
       const hasSelection = !editor.selection.isEmpty
       const selection = editor.selection

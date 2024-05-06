@@ -1,7 +1,8 @@
 import * as vscode from 'vscode'
+import type { Language } from 'utils-ai'
 import { Descriptor, DescriptorOptions, FetcherOptions, HttpFetcher, Prompter, PrompterOptions, SimpleMessagesFactory } from 'utils-ai'
 import { Logger } from '../logger.js'
-import { Configurator } from '../configuration.js'
+import { Configurator } from '../configurator.js'
 import { SecretsStorage } from '../secrets_storage.js'
 
 export function descriptionCommand(context: vscode.ExtensionContext) {
@@ -19,6 +20,10 @@ export function descriptionCommand(context: vscode.ExtensionContext) {
       vscode.workspace,
     )
 
+    const preferredLanguage = configurator.alwaysAskLanguage
+      ? await vscode.window.showQuickPick(Prompter.LANGUAGES) as Language | undefined || configurator.preferredLanguage
+      : configurator.preferredLanguage
+
     const time = Date.now()
     const editor = vscode.window.activeTextEditor
 
@@ -35,9 +40,10 @@ export function descriptionCommand(context: vscode.ExtensionContext) {
       }
 
       const prompterOptions = new PrompterOptions(
-        configurator.preferredLanguage,
+        preferredLanguage,
       )
       const prompter = new Prompter(prompterOptions)
+      prompter.merge(configurator.prompts)
       const prompt = prompter.find('descriptor')
 
       const filename = editor.document.fileName
@@ -69,6 +75,8 @@ export function descriptionCommand(context: vscode.ExtensionContext) {
           )
           const description = await descriptor.execute(text)
 
+          // TODO: add a setting to ask the user whether the description should be copy in the file of show in the log (or both).
+
           const position = editor.selection.active
           // replace the text with the description
           editor.edit((editBuilder) => {
@@ -76,6 +84,9 @@ export function descriptionCommand(context: vscode.ExtensionContext) {
           })
 
           await editor.document.save()
+
+          logger.log(`Description generated: ${description}`)
+          logger.show()
 
           const duration = Date.now() - time
           vscode.window.showInformationMessage(`Description generated from ${filename}`, {

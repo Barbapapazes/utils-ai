@@ -14,4 +14,8 @@ export class Logger {
   log(message: string) {
     this.#channel.appendLine(message)
   }
+
+  show() {
+    this.#channel.show(true)
+  }
 }

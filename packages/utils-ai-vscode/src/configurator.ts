@@ -1,6 +1,6 @@
 import type * as vscode from 'vscode'
 import { assertIsDefined } from '@poppinss/utils/assert'
-import type { Endpoint, Language, Model } from 'utils-ai'
+import type { Endpoint, Language, Model, Prompts } from 'utils-ai'
 
 export class Configurator {
   #messagePrefix = 'utils-ai-vscode:'
@@ -55,5 +55,19 @@ export class Configurator {
     assertIsDefined(preferredExtensions, `Supported extensions not found in configuration`)
 
     return preferredExtensions
+  }
+
+  get alwaysAskLanguage(): boolean {
+    const alwaysAskLanguage = this.#configuration.get<boolean>('alwaysAskLanguage')
+    assertIsDefined(alwaysAskLanguage, `Always ask language not found in configuration`)
+
+    return alwaysAskLanguage
+  }
+
+  get prompts(): Prompts {
+    const prompts = this.#configuration.get<Prompts>('prompts')
+    assertIsDefined(prompts, `Prompts not found in configuration`)
+
+    return prompts
   }
 }

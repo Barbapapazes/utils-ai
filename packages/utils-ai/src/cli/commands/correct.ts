@@ -82,7 +82,7 @@ export default defineCommand({
       config.preferredLanguage,
     )
     const prompter = new Prompter(prompterOptions)
-    const prompt = prompter.find('spell-checker-md')
+    const prompt = prompter.find('spell-checker')
 
     const messagesFactory = new SimpleMessagesFactory()
 
