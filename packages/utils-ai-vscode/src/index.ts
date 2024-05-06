@@ -4,8 +4,15 @@ import { correctCommand } from './commands/correct_command.js'
 import { saveAuthTokenCommand } from './commands/save_auth_token_command.js'
 import { deleteAuthTokenCommand } from './commands/delete_auth_token_command.js'
 import { SecretsStorage } from './secrets_storage.js'
+import { Configurator } from './configuration.js'
 
 export function activate(context: vscode.ExtensionContext) {
+  /**
+   * Set context for the `package.json` because it's an array and using `config.` will interpret as a string.
+   */
+  const configuration = new Configurator(vscode.workspace)
+  vscode.commands.executeCommand('setContext', 'barbapapazes.utils-ai-vscode.supportedExtensions', configuration.supportedExtensions)
+
   /**
    * Configuration commands
    */

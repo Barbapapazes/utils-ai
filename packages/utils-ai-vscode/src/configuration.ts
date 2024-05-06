@@ -49,4 +49,11 @@ export class Configurator {
 
     return preferredLanguage
   }
+
+  get supportedExtensions(): string[] {
+    const preferredExtensions = this.#configuration.get<string[]>('supportedExtensions')
+    assertIsDefined(preferredExtensions, `Supported extensions not found in configuration`)
+
+    return preferredExtensions
+  }
 }
