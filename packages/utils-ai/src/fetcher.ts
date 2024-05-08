@@ -6,7 +6,7 @@ export interface Completion {
   object: string
   created: number
   model: string
-  choices: { index: number; message: Message; finish_reason: string }[]
+  choices: { index: number, message: Message, finish_reason: string }[]
   usage: {
     prompt_tokens: number
     completion_tokens: number
@@ -15,7 +15,7 @@ export interface Completion {
 }
 
 export interface Fetcher {
-  completions(messages: Message[]): Promise<Completion>
+  completions: (messages: Message[]) => Promise<Completion>
 }
 
 export class FetcherOptions {

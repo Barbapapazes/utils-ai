@@ -6,7 +6,7 @@ export interface Splitter {
    * @param text Text to split
    * @param maxChunkSize Maximal size of the chunk (in tokens)
    */
-  split(text: string, maxChunkSize: number): string[]
+  split: (text: string, maxChunkSize: number) => string[]
 }
 
 export class SimpleSplitter implements Splitter {
