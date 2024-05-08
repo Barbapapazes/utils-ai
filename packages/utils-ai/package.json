@@ -24,9 +24,10 @@
     ".": "./build/index.js"
   },
   "main": "build/index.js",
-  "bin": "./build/bin/run.js",
+  "bin": "./bin/index.mjs",
   "files": [
     "!build/bin/test.js",
+    "bin/index.mjs",
     "build/bin",
     "build/commands",
     "build/index.d.ts",
