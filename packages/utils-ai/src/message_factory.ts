@@ -4,7 +4,7 @@ export interface Message {
 }
 
 export interface MessagesFactory {
-  define(messages: Message[]): Message[]
+  define: (messages: Message[]) => Message[]
 }
 
 export class SimpleMessagesFactory implements MessagesFactory {
