@@ -67,5 +67,8 @@
       "tmp/**",
       "bin/**"
     ]
+  },
+  "imports": {
+    "#package.json": "./package.json"
   }
 }
