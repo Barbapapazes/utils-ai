@@ -3,7 +3,7 @@
   "name": "utils-ai-vscode",
   "displayName": "Utils AI",
   "type": "module",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "private": true,
   "description": "Write faster with AI",
   "license": "MIT",

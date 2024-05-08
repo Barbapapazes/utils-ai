@@ -1,7 +1,7 @@
 {
   "name": "utils-ai",
   "type": "module",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "packageManager": "pnpm@9.1.0",
   "description": "A CLI of AI Utils for writers",
   "author": "Estéban Soubiran <e.soubiran25@gmail.com> (https://github.com/barbapapazes/)",
