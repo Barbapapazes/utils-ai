@@ -6,9 +6,7 @@ import { Configurator } from '../configurator.js'
 import { SecretsStorage } from '../secrets_storage.js'
 
 export function descriptionCommand(context: vscode.ExtensionContext) {
-  const logger = new Logger(
-    vscode.window,
-  )
+  const logger = new Logger()
 
   const secretsStorage = new SecretsStorage(
     context.secrets,

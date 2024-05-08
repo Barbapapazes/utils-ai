@@ -5,8 +5,11 @@ import { saveAuthTokenCommand } from './commands/save_auth_token_command.js'
 import { deleteAuthTokenCommand } from './commands/delete_auth_token_command.js'
 import { SecretsStorage } from './secrets_storage.js'
 import { Configurator } from './configurator.js'
+import { Logger } from './logger.js'
 
 export function activate(context: vscode.ExtensionContext) {
+  Logger.createChannel(vscode.window)
+
   /**
    * Set context for the `package.json` because it's an array and using `config.` will interpret as a string.
    */

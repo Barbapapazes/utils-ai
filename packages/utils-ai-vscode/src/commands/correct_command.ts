@@ -6,9 +6,7 @@ import { Logger } from '../logger.js'
 import { SecretsStorage } from '../secrets_storage.js'
 
 export function correctCommand(context: vscode.ExtensionContext) {
-  const logger = new Logger(
-    vscode.window,
-  )
+  const logger = new Logger()
 
   const secretsStorage = new SecretsStorage(
     context.secrets,

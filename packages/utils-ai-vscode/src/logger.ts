@@ -1,21 +1,21 @@
 import type * as vscode from 'vscode'
 
 export class Logger {
-  #key = 'Utils AI'
+  static readonly channelName = 'Utils AI'
+  static channel: vscode.OutputChannel
 
-  #channel: vscode.OutputChannel
+  static createChannel(window: typeof vscode.window) {
+    if (Logger.channel)
+      return
 
-  constructor(
-    private window: typeof vscode.window,
-  ) {
-    this.#channel = this.window.createOutputChannel(this.#key)
+    Logger.channel = window.createOutputChannel(Logger.channelName)
   }
 
   log(message: string) {
-    this.#channel.appendLine(message)
+    Logger.channel.appendLine(message)
   }
 
   show() {
-    this.#channel.show(true)
+    Logger.channel.show(true)
   }
 }

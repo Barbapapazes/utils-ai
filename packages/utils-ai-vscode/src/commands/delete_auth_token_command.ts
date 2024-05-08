@@ -3,9 +3,7 @@ import { SecretsStorage } from '../secrets_storage.js'
 import { Logger } from '../logger.js'
 
 export function deleteAuthTokenCommand(context: vscode.ExtensionContext) {
-  const logger = new Logger(
-    vscode.window,
-  )
+  const logger = new Logger()
 
   const secretsStorage = new SecretsStorage(
     context.secrets,
