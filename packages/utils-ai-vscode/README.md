@@ -27,3 +27,5 @@ You can also click on the button at the top right of the editor.
 Using the command `Utils AI: Generate description from current file using AI` generate a description and add it after your cursor.
 
 **This command is only available in a markdown file.**
+
+<!-- explain each commands and the how to use it -->

@@ -3,7 +3,11 @@ import type { Language } from 'utils-ai'
 import { Descriptor, DescriptorOptions, FetcherOptions, HttpFetcher, Prompter, PrompterOptions, SimpleMessagesFactory } from 'utils-ai'
 import { Logger } from '../logger.js'
 import { Configurator } from '../configurator.js'
-import { SecretsStorage } from '../secrets_storage.js'
+import { SecretsStorage } from '../vscode/secrets_storage.js'
+
+/**
+ * Create
+ */
 
 export function descriptionCommand(context: vscode.ExtensionContext) {
   const logger = new Logger()

@@ -143,18 +143,60 @@
             ".md",
             ".mdx"
           ]
+        },
+        "utilsAi.ai": {
+          "type": "object"
         }
       }
     },
     "commands": [
       {
-        "command": "barbapapazes.utils-ai-vscode.addAuthToken",
-        "title": "Add an authorization token",
+        "command": "barbapapazes.utils-ai-vscode.listAuthTokens",
+        "title": "List authorization tokens",
+        "category": "Utils AI"
+      },
+      {
+        "command": "barbapapazes.utils-ai-vscode.createAuthToken",
+        "title": "Create an authorization token",
         "category": "Utils AI"
       },
       {
         "command": "barbapapazes.utils-ai-vscode.deleteAuthToken",
-        "title": "Remove the authorization token",
+        "title": "Delete an authorization token",
+        "category": "Utils AI"
+      },
+      {
+        "command": "barbapapazes.utils-ai-vscode.createPrompt",
+        "title": "Create a prompt",
+        "category": "Utils AI"
+      },
+      {
+        "command": "barbapapazes.utils-ai-vscode.deletePrompt",
+        "title": "Delete a prompt",
+        "category": "Utils AI"
+      },
+      {
+        "command": "barbapapazes.utils-ai-vscode.createAI",
+        "title": "Create an AI",
+        "category": "Utils AI"
+      },
+      {
+        "command": "barbapapazes.utils-ai-vscode.deleteAI",
+        "title": "Delete an AI",
+        "category": "Utils AI"
+      },
+      {
+        "command": "barbapapazes.utils-ai-vscode.correct",
+        "title": "Correct current file using AI",
+        "category": "Utils AI",
+        "icon": {
+          "light": "./images/light.svg",
+          "dark": "./images/dark.svg"
+        }
+      },
+      {
+        "command": "barbapapazes.utils-ai-vscode.description",
+        "title": "Generate description from current file using AI",
         "category": "Utils AI"
       },
       {
@@ -199,6 +241,7 @@
     "publish": "vsce publish --no-dependencies"
   },
   "dependencies": {
+    "dedent": "^1.5.3",
     "defu": "^6.1.2",
     "utils-ai": "workspace:*"
   },

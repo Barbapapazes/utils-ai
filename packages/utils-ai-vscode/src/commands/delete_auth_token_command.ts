@@ -1,19 +1,42 @@
-import * as vscode from 'vscode'
-import { SecretsStorage } from '../secrets_storage.js'
-import { Logger } from '../logger.js'
+import type { ExtensionContext } from 'vscode'
+import { window } from 'vscode'
+import { SecretsStorage } from '../vscode/secrets_storage.js'
+import { Logger } from '../vscode/logger.js'
+import { Storage } from '../vscode/storage.js'
+import { AUTH_TOKEN_NAMES_KEY } from '../constants.js'
 
-export function deleteAuthTokenCommand(context: vscode.ExtensionContext) {
-  const logger = new Logger()
-
-  const secretsStorage = new SecretsStorage(
-    context.secrets,
-  )
+export function deleteAuthTokenCommand(context: ExtensionContext) {
+  Logger.info('Initializing deleteAuthTokenCommand...')
 
   return async () => {
-    logger.log('Deleting authorization token...')
+    Logger.info('Start delete authorization token...')
 
-    await secretsStorage.deleteAuthToken()
+    const storage = new Storage(context.globalState)
+    const secretsStorage = new SecretsStorage(
+      context.secrets,
+    )
 
-    vscode.window.showInformationMessage('Authorization token deleted.')
+    const tokenNames = JSON.parse(await storage.get(AUTH_TOKEN_NAMES_KEY) || '[]') as string[]
+
+    Logger.info('Asking for authorization token name...')
+    const name = await window.showQuickPick(
+      tokenNames,
+      {
+        placeHolder: 'Select a token to delete',
+      },
+    )
+
+    if (!name) {
+      Logger.error('No token name provided. Please try again.')
+      return
+    }
+
+    Logger.info('Deleting authorization token name...')
+    await storage.save(AUTH_TOKEN_NAMES_KEY, JSON.stringify(tokenNames.filter(tokenName => tokenName !== name)))
+
+    Logger.info('Deleting authorization token...')
+    await secretsStorage.delete(name)
+
+    window.showInformationMessage(`Authorization token '${name}' deleted.`)
   }
 }
