@@ -3,7 +3,7 @@ import type { Language } from 'utils-ai'
 import { Correcter, CorrecterOptions, FetcherOptions, HttpFetcher, Prompter, PrompterOptions, SimpleMessagesFactory, SimpleSplitter, SimpleTokenizer } from 'utils-ai'
 import { Configurator } from '../configurator.js'
 import { Logger } from '../logger.js'
-import { SecretsStorage } from '../secrets_storage.js'
+import { SecretsStorage } from '../vscode/secrets_storage.js'
 
 export function correctCommand(context: vscode.ExtensionContext) {
   const logger = new Logger()
