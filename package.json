@@ -94,6 +94,20 @@
               "prompt": {
                 "type": "string",
                 "description": "Prompt to use for the action"
+              },
+              "git": {
+                "type": "object",
+                "description": "Git options",
+                "properties": {
+                  "commitMessageBeforeAction": {
+                    "type": "string",
+                    "description": "Before running the action, the file will be committed with this message. You can use `__ask__` to ask for a message"
+                  },
+                  "commitMessageAfterAction": {
+                    "type": "string",
+                    "description": "After running the action, the file will be committed with this message. You can use `__ask__` to ask for a message"
+                  }
+                }
               }
             },
             "required": [

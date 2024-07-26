@@ -1,10 +1,7 @@
 import { window } from 'vscode'
-import { Logger } from '../Logger.js'
 import { BaseCommand } from './base_command.js'
 
 export class AddKeyCommand extends BaseCommand {
-  readonly id = 'addKey'
-
   async run(): Promise<void> {
     const name = await this.askForName()
 
@@ -12,7 +9,7 @@ export class AddKeyCommand extends BaseCommand {
 
     await this.save(name, key)
 
-    Logger.log('Key added successfully.', {
+    this.logger.log('Key added successfully.', {
       notification: true,
     })
   }

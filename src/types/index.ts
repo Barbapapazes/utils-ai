@@ -16,4 +16,8 @@ export interface Action {
   name: string
   ai: AI['name']
   prompt: Prompt['name']
+  git?: {
+    commitMessageBeforeAction?: '__ask__' | (string & {})
+    commitMessageAfterAction?: '__ask__' | (string & {})
+  }
 }

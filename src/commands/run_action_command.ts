@@ -1,13 +1,11 @@
 import type { TextEditor } from 'vscode'
-import { ProgressLocation, Range, window, workspace } from 'vscode'
+import { ProgressLocation, Range, extensions, window, workspace } from 'vscode'
 import type { AI, Action, Prompt } from '../types/index.js'
 import { ai as aiIndex } from '../ai/index.js'
 import type { BaseAI } from '../ai/base_ai.js'
 import { BaseCommand } from './base_command.js'
 
 export class RunActionCommand extends BaseCommand {
-  readonly id = 'runAction'
-
   async run(): Promise<void> {
     this.logger.log('Ask for action...')
     const action = await this.askForAction()
@@ -15,27 +13,31 @@ export class RunActionCommand extends BaseCommand {
     const configuration = await this.getAIConfiguration(action)
     const prompt = await this.getPrompt(action)
 
-    const ai = await this.createAI(configuration)
+    this.logger.log('Commit changes before action...')
+    await this.commitWithAction(action, 'before')
 
     const message = `Ask '${configuration.name}' to '${prompt.name}'...`
-    this.logger.log(message)
     await window.withProgress({
       location: ProgressLocation.Notification,
       title: message,
       cancellable: false,
     }, async () => {
+      this.logger.log(message)
+
+      const ai = await this.createAI(configuration)
       const completion = await ai.ask(prompt.content, this.getActiveEditorText())
 
       this.logger.log('Apply changes...')
       await this.applyChanges(completion)
-
-      this.logger.log(
-        'Action executed successfully.',
-        {
-          notification: true,
-        },
-      )
     })
+
+    this.logger.log('Commit changes after action...')
+    await this.commitWithAction(action, 'after')
+
+    this.logger.log(
+      `Action '${action.name}' executed successfully.`,
+      { notification: true },
+    )
   }
 
   protected async askForAction(): Promise<Action> {
@@ -101,7 +103,7 @@ export class RunActionCommand extends BaseCommand {
   }
 
   protected async saveActiveEditor(): Promise<void> {
-    this.getActiveEditor().document.save()
+    await this.getActiveEditor().document.save()
   }
 
   protected async applyChanges(content: string): Promise<void> {
@@ -113,5 +115,45 @@ export class RunActionCommand extends BaseCommand {
     })
 
     await this.saveActiveEditor()
+  }
+
+  protected async commitWithAction(action: Action, when: 'before' | 'after'): Promise<void> {
+    let commitMessage = when === 'before' ? action.git?.commitMessageBeforeAction : action.git?.commitMessageAfterAction
+
+    if (!commitMessage) {
+      return
+    }
+
+    if (commitMessage === '__ask__') {
+      commitMessage = await window.showInputBox({ prompt: 'Enter the commit message' })
+    }
+
+    this.assert(commitMessage, 'Commit message is required.')
+
+    await this.commit(this.getActiveEditor().document.fileName, commitMessage)
+  }
+
+  protected async commit(filename: string, message: string): Promise<void> {
+    const repository = this.git().repositories[0]
+
+    try {
+      await repository.add([filename])
+      await repository.commit(message)
+    }
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    catch (_: unknown) {
+      this.logger.log('No changes to commit.')
+      // Ignore error because it's mean that the file is already committed
+    }
+  }
+
+  protected git(): any {
+    const gitExtension = extensions.getExtension('vscode.git')?.exports
+
+    if (!gitExtension.enabled) {
+      throw new Error('Git extension is not enabled.')
+    }
+
+    return gitExtension.getAPI(1)
   }
 }

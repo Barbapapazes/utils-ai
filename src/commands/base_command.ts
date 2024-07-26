@@ -1,10 +1,9 @@
 import { AssertionError } from 'node:assert'
 import { type ExtensionContext, window } from 'vscode'
-import { Logger } from '../Logger.js'
+import { Logger } from '../core/Logger.js'
 import type { Awaitable } from '../types/index.js'
 
 export class BaseCommand {
-  static readonly id: string = ''
   protected readonly logger: Logger
 
   constructor(protected id: string, protected context: ExtensionContext) {
