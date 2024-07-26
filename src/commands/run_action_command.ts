@@ -1,4 +1,4 @@
-import type { TextEditor } from 'vscode'
+import type { Selection, TextEditor } from 'vscode'
 import { ProgressLocation, Range, extensions, window, workspace } from 'vscode'
 import type { AI, Action, Prompt } from '../types/index.js'
 import { ai as aiIndex } from '../ai/index.js'
@@ -98,8 +98,25 @@ export class RunActionCommand extends BaseCommand {
     return editor
   }
 
+  /**
+   * If there is a selection, return the selected text. Otherwise, return the entire text.
+   */
   protected getActiveEditorText(): string {
+    const selection = this.getActiveEditorSelection()
+
+    if (!selection.isEmpty) {
+      return this.getActiveEditor().document.getText(selection)
+    }
+
     return this.getActiveEditor().document.getText()
+  }
+
+  protected getActiveEditorSelection(): Selection {
+    return this.getActiveEditor().selection
+  }
+
+  protected hasActiveEditorSelection(): boolean {
+    return !this.getActiveEditorSelection().isEmpty
   }
 
   protected async saveActiveEditor(): Promise<void> {
@@ -108,7 +125,7 @@ export class RunActionCommand extends BaseCommand {
 
   protected async applyChanges(content: string): Promise<void> {
     this.getActiveEditor().edit((editBuilder) => {
-      const range = new Range(0, 0, this.getActiveEditorText().length, 0)
+      const range = this.hasActiveEditorSelection() ? this.getActiveEditorSelection() : new Range(0, 0, this.getActiveEditorText().length, 0)
 
       editBuilder.delete(range)
       editBuilder.insert(range.start, content)
