@@ -8,6 +8,7 @@ export function activate(context: ExtensionContext): void {
 
   Logger.log('Activating extension...')
 
+  Logger.log('Registering commands...')
   for (const [key, Command] of Object.entries(commands)) {
     const command = new Command(key, context)
     const disposable = vsCommands.registerCommand(`barbapapazes.utils-ai.${key}`, command.execute())

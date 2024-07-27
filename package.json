@@ -129,6 +129,11 @@
         "command": "barbapapazes.utils-ai.runAction",
         "title": "Run action",
         "category": "Utils AI"
+      },
+      {
+        "command": "barbapapazes.utils-ai.checkConfig",
+        "title": "Check configuration",
+        "category": "Utils AI"
       }
     ]
   },
