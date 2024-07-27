@@ -2,7 +2,7 @@ import { window } from 'vscode'
 import { BaseCommand } from './base_command.js'
 
 export class AddKeyCommand extends BaseCommand {
-  async run(): Promise<void> {
+  protected async run(): Promise<void> {
     const name = await this.askForName()
 
     const key = await this.askForKey()

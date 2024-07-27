@@ -1,14 +1,16 @@
 import type { Selection, TextEditor } from 'vscode'
-import { ProgressLocation, Range, extensions, window, workspace } from 'vscode'
+import { ProgressLocation, Range, extensions, window } from 'vscode'
 import type { AI, Action, Prompt } from '../types/index.js'
 import { ai as aiIndex } from '../ai/index.js'
 import type { BaseAI } from '../ai/base_ai.js'
 import { BaseCommand } from './base_command.js'
 
 export class RunActionCommand extends BaseCommand {
-  // Passing the argument `action_` allow the command to be reused.
-  async run(action_?: Action): Promise<void> {
-    let action = action_
+  // Allow an parent command to set an action (e.g.: quick action command)
+  action: Action | undefined
+
+  protected async run(): Promise<void> {
+    let action = this.action
 
     if (!action) {
       this.logger.log('Ask for action...')
@@ -46,9 +48,7 @@ export class RunActionCommand extends BaseCommand {
   }
 
   protected async askForAction(): Promise<Action> {
-    const actions = workspace.getConfiguration('utilsAi').get<Action[]>('actions')
-
-    this.assert(actions, 'Actions are required.')
+    const actions = this.getActions()
 
     const actionName = await window.showQuickPick(actions.map(({ name }) => name))
 
@@ -62,7 +62,7 @@ export class RunActionCommand extends BaseCommand {
   }
 
   protected async getAIConfiguration(action: Action): Promise<AI> {
-    const configuration = workspace.getConfiguration('utilsAi').get<AI[]>('ai')?.find(({ name }) => name === action.ai)
+    const configuration = this.getAI().find(({ name }) => name === action.ai)
 
     this.assert(configuration, 'Configuration not found.')
 
@@ -70,9 +70,7 @@ export class RunActionCommand extends BaseCommand {
   }
 
   protected async getPrompt(action: Action): Promise<Prompt> {
-    const prompts = workspace.getConfiguration('utilsAi').get<Prompt[]>('prompts')
-
-    this.assert(prompts, 'Prompts are required.')
+    const prompts = this.getPrompts()
 
     const prompt = prompts.find(({ name: promptName }) => promptName === action.prompt)
 

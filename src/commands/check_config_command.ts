@@ -1,9 +1,8 @@
-import { workspace } from 'vscode'
 import type { AI, Action, Prompt, QuickAction } from '../types/index.js'
 import { BaseCommand } from './base_command.js'
 
 export class CheckConfigCommand extends BaseCommand {
-  async run(): Promise<void> {
+  protected async run(): Promise<void> {
     const prompts = this.getPrompts()
     const ai = this.getAI()
     const actions = this.getActions()
@@ -41,32 +40,8 @@ export class CheckConfigCommand extends BaseCommand {
     }
   }
 
-  protected getPrompts(): Prompt[] {
-    const prompts = workspace.getConfiguration('utilsAi').get<Prompt[]>('prompts')
-
-    this.assert(prompts, 'Prompts are required.')
-
-    return prompts
-  }
-
-  protected getAI(): AI[] {
-    const ai = workspace.getConfiguration('utilsAi').get<AI[]>('ai')
-
-    this.assert(ai, 'AI is required.')
-
-    return ai
-  }
-
-  protected getActions(): Action[] {
-    const actions = workspace.getConfiguration('utilsAi').get<Action[]>('actions')
-
-    this.assert(actions, 'Actions are required.')
-
-    return actions
-  }
-
   protected getQuickAction(): QuickAction | undefined {
-    const quickAction = workspace.getConfiguration('utilsAi').get<QuickAction | undefined>('quickAction')
+    const quickAction = this.getConfiguration().get<QuickAction | undefined>('quickAction')
 
     return quickAction
   }
