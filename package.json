@@ -116,6 +116,23 @@
               "prompt"
             ]
           }
+        },
+        "utilsAi.quickAction": {
+          "type": "object",
+          "description": "Quick action runnable from an icon in the editor title bar",
+          "properties": {
+            "action": {
+              "type": "string",
+              "description": "Action to run"
+            },
+            "fileTypes": {
+              "type": "array",
+              "description": "File types for which the quick action is available. Should start with a dot. Example: `.md`.",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     },
@@ -131,11 +148,29 @@
         "category": "Utils AI"
       },
       {
+        "command": "barbapapazes.utils-ai.runQuickAction",
+        "title": "Run quick action",
+        "category": "Utils AI",
+        "icon": {
+          "light": "./images/light.svg",
+          "dark": "./images/dark.svg"
+        }
+      },
+      {
         "command": "barbapapazes.utils-ai.checkConfig",
         "title": "Check configuration",
         "category": "Utils AI"
       }
-    ]
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "barbapapazes.utils-ai.runQuickAction",
+          "when": "resourceExtname in barbapapazes.utils-ai.showQuickAction",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "dev": "pnpm run build --watch src",

@@ -6,9 +6,14 @@ import type { BaseAI } from '../ai/base_ai.js'
 import { BaseCommand } from './base_command.js'
 
 export class RunActionCommand extends BaseCommand {
-  async run(): Promise<void> {
-    this.logger.log('Ask for action...')
-    const action = await this.askForAction()
+  // Passing the argument `action_` allow the command to be reused.
+  async run(action_?: Action): Promise<void> {
+    let action = action_
+
+    if (!action) {
+      this.logger.log('Ask for action...')
+      action = await this.askForAction()
+    }
 
     const configuration = await this.getAIConfiguration(action)
     const prompt = await this.getPrompt(action)

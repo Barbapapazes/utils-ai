@@ -21,3 +21,8 @@ export interface Action {
     commitMessageAfterAction?: '__ask__' | (string & {})
   }
 }
+
+export interface QuickAction {
+  action: Action['name']
+  fileTypes: string[]
+}

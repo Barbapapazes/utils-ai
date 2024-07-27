@@ -1,14 +1,19 @@
 import { workspace } from 'vscode'
-import type { AI, Action, Prompt } from '../types/index.js'
+import type { AI, Action, Prompt, QuickAction } from '../types/index.js'
 import { BaseCommand } from './base_command.js'
 
 export class CheckConfigCommand extends BaseCommand {
   async run(): Promise<void> {
-    const prompts = await this.getPrompts()
-    const ai = await this.getAI()
-    const actions = await this.getActions()
+    const prompts = this.getPrompts()
+    const ai = this.getAI()
+    const actions = this.getActions()
+    const quickAction = this.getQuickAction()
 
     this.checkActions(prompts, ai, actions)
+
+    if (quickAction) {
+      this.checkQuickAction(quickAction, actions)
+    }
 
     this.checkAI(ai)
 
@@ -24,6 +29,10 @@ export class CheckConfigCommand extends BaseCommand {
     }
   }
 
+  protected checkQuickAction(quickAction: QuickAction, actions: Action[]): void {
+    this.assert(actions.find(({ name }) => name === quickAction.action), `Action '${quickAction.action}' not found.`)
+  }
+
   protected checkAI(ai: AI[]): void {
     for (const aiConfig of ai) {
       const key = this.context.secrets.get(aiConfig.keyName)
@@ -32,7 +41,7 @@ export class CheckConfigCommand extends BaseCommand {
     }
   }
 
-  protected async getPrompts(): Promise<Prompt[]> {
+  protected getPrompts(): Prompt[] {
     const prompts = workspace.getConfiguration('utilsAi').get<Prompt[]>('prompts')
 
     this.assert(prompts, 'Prompts are required.')
@@ -40,7 +49,7 @@ export class CheckConfigCommand extends BaseCommand {
     return prompts
   }
 
-  protected async getAI(): Promise<AI[]> {
+  protected getAI(): AI[] {
     const ai = workspace.getConfiguration('utilsAi').get<AI[]>('ai')
 
     this.assert(ai, 'AI is required.')
@@ -48,11 +57,17 @@ export class CheckConfigCommand extends BaseCommand {
     return ai
   }
 
-  protected async getActions(): Promise<Action[]> {
+  protected getActions(): Action[] {
     const actions = workspace.getConfiguration('utilsAi').get<Action[]>('actions')
 
     this.assert(actions, 'Actions are required.')
 
     return actions
+  }
+
+  protected getQuickAction(): QuickAction | undefined {
+    const quickAction = workspace.getConfiguration('utilsAi').get<QuickAction | undefined>('quickAction')
+
+    return quickAction
   }
 }
