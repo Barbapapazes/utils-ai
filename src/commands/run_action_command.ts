@@ -1,5 +1,5 @@
 import type { Selection, TextEditor } from 'vscode'
-import { Position, ProgressLocation, Range, Uri, extensions, window, workspace } from 'vscode'
+import { ProgressLocation, Range, extensions, window, workspace } from 'vscode'
 import type { AI, Action, Prompt } from '../types/index.js'
 import { ai as aiIndex } from '../ai/index.js'
 import type { BaseAI } from '../ai/base_ai.js'
