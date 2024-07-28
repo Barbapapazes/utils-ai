@@ -95,6 +95,15 @@
                 "type": "string",
                 "description": "Prompt to use for the action"
               },
+              "target": {
+                "type": "string",
+                "enum": [
+                  "inplace",
+                  "newfile"
+                ],
+                "default": "inplace",
+                "description": "Where to put the result of the action"
+              },
               "git": {
                 "type": "object",
                 "description": "Git options",

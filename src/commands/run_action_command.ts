@@ -1,5 +1,5 @@
 import type { Selection, TextEditor } from 'vscode'
-import { ProgressLocation, Range, extensions, window } from 'vscode'
+import { Position, ProgressLocation, Range, Uri, extensions, window, workspace } from 'vscode'
 import type { AI, Action, Prompt } from '../types/index.js'
 import { ai as aiIndex } from '../ai/index.js'
 import type { BaseAI } from '../ai/base_ai.js'
@@ -13,7 +13,6 @@ export class RunActionCommand extends BaseCommand {
     const configuration = await this.getAIConfiguration(action)
     const prompt = await this.getPrompt(action)
 
-    this.logger.log('Commit changes before action...')
     await this.commitWithAction(action, 'before')
 
     const message = `Ask '${configuration.name}' to '${prompt.name}'...`
@@ -27,11 +26,14 @@ export class RunActionCommand extends BaseCommand {
       const ai = await this.createAI(configuration)
       const completion = await ai.ask(prompt.content, this.getActiveEditorText())
 
-      this.logger.log('Apply changes...')
-      await this.applyChanges(completion)
+      if (action.target === 'inplace') {
+        await this.applyChanges(completion)
+      }
+      else if (action.target === 'newfile') {
+        await this.showCompletion(completion)
+      }
     })
 
-    this.logger.log('Commit changes after action...')
     await this.commitWithAction(action, 'after')
 
     this.logger.log(
@@ -137,6 +139,8 @@ export class RunActionCommand extends BaseCommand {
   }
 
   protected async applyChanges(content: string): Promise<void> {
+    this.logger.log('Apply changes...')
+
     this.getActiveEditor().edit((editBuilder) => {
       const range = this.hasActiveEditorSelection() ? this.getActiveEditorSelection() : new Range(0, 0, this.getActiveEditorText().length, 0)
 
@@ -147,7 +151,16 @@ export class RunActionCommand extends BaseCommand {
     await this.saveActiveEditor()
   }
 
+  protected async showCompletion(content: string): Promise<void> {
+    this.logger.log('Show completion...')
+
+    const editor = await workspace.openTextDocument({ content, language: 'plaintext' })
+    await window.showTextDocument(editor)
+  }
+
   protected async commitWithAction(action: Action, when: 'before' | 'after'): Promise<void> {
+    this.logger.log(`Commit changes ${when} action...`)
+
     let commitMessage = when === 'before' ? action.git?.commitMessageBeforeAction : action.git?.commitMessageAfterAction
 
     if (!commitMessage) {

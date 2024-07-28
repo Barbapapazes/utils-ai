@@ -16,6 +16,7 @@ export interface Action {
   name: string
   ai: AI['name']
   prompt: Prompt['name']
+  target: 'inplace' | 'newfile'
   git?: {
     commitMessageBeforeAction?: '__ask__' | (string & {})
     commitMessageAfterAction?: '__ask__' | (string & {})
