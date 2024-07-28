@@ -152,6 +152,11 @@
         "category": "Utils AI"
       },
       {
+        "command": "barbapapazes.utils-ai.removeKey",
+        "title": "Remove Key",
+        "category": "Utils AI"
+      },
+      {
         "command": "barbapapazes.utils-ai.runAction",
         "title": "Run action",
         "category": "Utils AI",

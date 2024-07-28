@@ -1,6 +1,8 @@
 import type { Awaitable } from '../types/index.js'
 
 export class BaseAI {
+  static name: string
+
   protected key: string
   protected options: Record<string, unknown>
 
@@ -9,7 +11,7 @@ export class BaseAI {
     this.options = options
   }
 
-  ask(_: string, __: string): Awaitable<string> {
+  ask(_prompt: string, _content: string): Awaitable<string> {
     throw new Error('Method not implemented.')
   }
 }

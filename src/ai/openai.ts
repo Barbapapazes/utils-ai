@@ -1,6 +1,8 @@
 import { BaseAI } from './base_ai.js'
 
 export class OpenAI extends BaseAI {
+  static name = 'OpenAI'
+
   constructor(key: string, options: Record<string, unknown> = {}) {
     super(key, options)
   }
