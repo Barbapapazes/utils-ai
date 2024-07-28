@@ -6,19 +6,16 @@ import { RunActionCommand } from './run_action_command.js'
 export class RunQuickActionCommand extends BaseCommand {
   action: Action | undefined
 
-  async run(): Promise<void> {
+  protected async run(): Promise<void> {
     const quickAction = this.getQuickAction()
-    const action = this.getAction(quickAction.action)
 
-    await this.executeAction(action)
+    await this.executeAction(quickAction.action)
   }
 
-  protected async executeAction(action: Action): Promise<void> {
+  protected async executeAction(actionName: string): Promise<void> {
     const RunAction = new RunActionCommand('runAction', this.context)
 
-    RunAction.action = action
-
-    await RunAction.execute()
+    await RunAction.execute(actionName)
   }
 
   protected getQuickAction(): QuickAction {

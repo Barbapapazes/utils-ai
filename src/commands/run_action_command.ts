@@ -3,19 +3,12 @@ import { ProgressLocation, Range, extensions, window } from 'vscode'
 import type { AI, Action, Prompt } from '../types/index.js'
 import { ai as aiIndex } from '../ai/index.js'
 import type { BaseAI } from '../ai/base_ai.js'
+import { ActionTreeItem } from '../providers/actions_tree_data_provider.js'
 import { BaseCommand } from './base_command.js'
 
 export class RunActionCommand extends BaseCommand {
-  // Allow an parent command to set an action (e.g.: quick action command)
-  action: Action | undefined
-
-  protected async run(): Promise<void> {
-    let action = this.action
-
-    if (!action) {
-      this.logger.log('Ask for action...')
-      action = await this.askForAction()
-    }
+  protected async run(actionName?: string | ActionTreeItem): Promise<void> {
+    const action = await this.getAction(actionName)
 
     const configuration = await this.getAIConfiguration(action)
     const prompt = await this.getPrompt(action)
@@ -45,6 +38,23 @@ export class RunActionCommand extends BaseCommand {
       `Action '${action.name}' executed successfully.`,
       { notification: true },
     )
+  }
+
+  protected async getAction(action?: string | ActionTreeItem): Promise<Action> {
+    if (typeof action === 'string') {
+      const _action = this.getActions().find(({ name }) => name === action)
+
+      this.assert(_action, 'Action not found.')
+
+      return _action
+    }
+
+    if (action instanceof ActionTreeItem) {
+      return action.getAction()
+    }
+
+    this.logger.log('Ask for action...')
+    return await this.askForAction()
   }
 
   protected async askForAction(): Promise<Action> {

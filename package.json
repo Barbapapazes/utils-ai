@@ -145,7 +145,8 @@
       {
         "command": "barbapapazes.utils-ai.runAction",
         "title": "Run action",
-        "category": "Utils AI"
+        "category": "Utils AI",
+        "icon": "$(play)"
       },
       {
         "command": "barbapapazes.utils-ai.runQuickAction",
@@ -169,8 +170,38 @@
           "when": "resourceExtname in barbapapazes.utils-ai.showQuickAction",
           "group": "navigation"
         }
+      ],
+      "view/item/context": [
+        {
+          "command": "barbapapazes.utils-ai.runAction",
+          "when": "view == 'utils-ai-actions' && viewItem == action",
+          "group": "inline"
+        }
       ]
-    }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "utils-ai",
+          "title": "Utils AI",
+          "icon": "./images/icon.png"
+        }
+      ]
+    },
+    "views": {
+      "utils-ai": [
+        {
+          "id": "utils-ai-actions",
+          "name": "Actions"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "utils-ai-actions",
+        "contents": "View and run actions.\n[Setup a new action](https://github.com/barbapapazes/utils-ai)"
+      }
+    ]
   },
   "scripts": {
     "dev": "pnpm run build --watch src",
