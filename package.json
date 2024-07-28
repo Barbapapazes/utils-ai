@@ -1,21 +1,226 @@
 {
-  "name": "utils-ai",
+  "publisher": "barbapapazes",
+  "name": "utils-ai-vscode",
+  "displayName": "Utils AI",
   "type": "module",
   "version": "0.4.6",
   "private": true,
-  "packageManager": "pnpm@9.1.0",
-  "description": "A Set of AI Utils",
+  "packageManager": "pnpm@9.5.0+sha512.140036830124618d624a2187b50d04289d5a087f326c9edfc0ccd733d76c4f52c3a313d4fc148794a2a9d81553016004e6742e8cf850670268a7387fc220c903",
+  "description": "Write faster with AI",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/barbapapazes/utils-ai"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/index.cjs",
+  "icon": "./images/icon.png",
+  "engines": {
+    "vscode": "^1.83.1"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "configuration": {
+      "title": "Utils AI",
+      "properties": {
+        "utilsAi.prompts": {
+          "type": "array",
+          "description": "Prompts",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the prompt"
+              },
+              "content": {
+                "type": "string",
+                "description": "Content of the prompt"
+              }
+            },
+            "required": [
+              "name",
+              "content"
+            ]
+          }
+        },
+        "utilsAi.ai": {
+          "type": "array",
+          "description": "AI",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the AI"
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of the AI",
+                "enum": [
+                  "openai"
+                ]
+              },
+              "keyName": {
+                "type": "string",
+                "description": "Key name to use to access the AI"
+              }
+            },
+            "required": [
+              "name",
+              "type",
+              "keyName"
+            ]
+          }
+        },
+        "utilsAi.actions": {
+          "type": "array",
+          "description": "Actions",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the action"
+              },
+              "ai": {
+                "type": "string",
+                "description": "AI to use for the action"
+              },
+              "prompt": {
+                "type": "string",
+                "description": "Prompt to use for the action"
+              },
+              "git": {
+                "type": "object",
+                "description": "Git options",
+                "properties": {
+                  "commitMessageBeforeAction": {
+                    "type": "string",
+                    "description": "Before running the action, the file will be committed with this message. You can use `__ask__` to ask for a message"
+                  },
+                  "commitMessageAfterAction": {
+                    "type": "string",
+                    "description": "After running the action, the file will be committed with this message. You can use `__ask__` to ask for a message"
+                  }
+                }
+              }
+            },
+            "required": [
+              "name",
+              "ai",
+              "prompt"
+            ]
+          }
+        },
+        "utilsAi.quickAction": {
+          "type": "object",
+          "description": "Quick action runnable from an icon in the editor title bar",
+          "properties": {
+            "action": {
+              "type": "string",
+              "description": "Action to run"
+            },
+            "fileTypes": {
+              "type": "array",
+              "description": "File types for which the quick action is available. Should start with a dot. Example: `.md`.",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "barbapapazes.utils-ai.addKey",
+        "title": "Add Key",
+        "category": "Utils AI"
+      },
+      {
+        "command": "barbapapazes.utils-ai.runAction",
+        "title": "Run action",
+        "category": "Utils AI",
+        "icon": "$(play)"
+      },
+      {
+        "command": "barbapapazes.utils-ai.runQuickAction",
+        "title": "Run quick action",
+        "category": "Utils AI",
+        "icon": {
+          "light": "./images/light.svg",
+          "dark": "./images/dark.svg"
+        }
+      },
+      {
+        "command": "barbapapazes.utils-ai.checkConfig",
+        "title": "Check configuration",
+        "category": "Utils AI"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "barbapapazes.utils-ai.runQuickAction",
+          "when": "resourceExtname in barbapapazes.utils-ai.showQuickAction",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "barbapapazes.utils-ai.runAction",
+          "when": "view == 'utils-ai-actions' && viewItem == action",
+          "group": "inline"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "utils-ai",
+          "title": "Utils AI",
+          "icon": "./images/icon.png"
+        }
+      ]
+    },
+    "views": {
+      "utils-ai": [
+        {
+          "id": "utils-ai-actions",
+          "name": "Actions"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "utils-ai-actions",
+        "contents": "View and run actions.\n[Setup a new action](https://github.com/barbapapazes/utils-ai)"
+      }
+    ]
+  },
   "scripts": {
-    "release": "bumpp -r",
+    "dev": "pnpm run build --watch src",
+    "build": "tsup src/index.ts",
+    "vscode:prepublish": "pnpm run build",
+    "publish": "vsce publish --no-dependencies",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "pnpm run --filter utils-ai build && pnpm run --filter utils-ai-vscode build",
-    "test": "pnpm run -r test"
+    "release": "bumpp"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.16.3",
-    "bumpp": "^9.2.0",
-    "eslint": "^9.2.0"
+    "@antfu/eslint-config": "^2.23.2",
+    "@swc/core": "^1.7.1",
+    "@types/node": "^20.14.12",
+    "@types/vscode": "^1.81.1",
+    "@vscode/vsce": "^2.31.1",
+    "bumpp": "^9.4.1",
+    "eslint": "9.5.0",
+    "tsup": "^8.2.3",
+    "typescript": "^5.5.4"
   }
 }
