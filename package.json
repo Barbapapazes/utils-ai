@@ -226,7 +226,7 @@
     "publish": "vsce publish --no-dependencies",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "release": "bumpp"
+    "release": "npm run lint && bumpp"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.23.2",
