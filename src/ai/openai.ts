@@ -1,21 +1,22 @@
+import type { OpenAIConfiguration } from '../types/index.js'
 import { BaseAI } from './base_ai.js'
 
-export class OpenAI extends BaseAI {
+export class OpenAI extends BaseAI<OpenAIConfiguration> {
   static name = 'OpenAI'
 
-  constructor(key: string, options: Record<string, unknown> = {}) {
-    super(key, options)
-  }
+  protected endpoint = 'https://api.openai.com/v1/chat/completions'
 
   async ask(prompt: string, content: string): Promise<string> {
-    return await fetch('https://api.openai.com/v1/chat/completions', {
+    const { endpoint = this.endpoint, model } = this.options
+
+    return await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${this.key}`,
       },
       body: JSON.stringify({
-        model: this.options.model,
+        model,
         messages: [{ role: 'system', content: prompt }, { role: 'user', content }],
       }),
     })

@@ -98,10 +98,12 @@
               "target": {
                 "type": "string",
                 "enum": [
-                  "inplace",
+                  "replace",
+                  "append",
+                  "prepend",
                   "newfile"
                 ],
-                "default": "inplace",
+                "default": "replace",
                 "description": "Where to put the result of the action"
               },
               "git": {

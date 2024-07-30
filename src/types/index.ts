@@ -1,5 +1,12 @@
 export type Awaitable<T> = T | Promise<T>
 
+export type BaseAIConfiguration = Record<string, any>
+
+export interface OpenAIConfiguration {
+  model: string
+  endpoint?: string
+}
+
 export interface Prompt {
   name: string
   content: string
@@ -8,15 +15,15 @@ export interface Prompt {
 export interface AI {
   name: string
   keyName: string
-  type: string
-  model: string
+  provider: 'openai'
+  configuration: OpenAIConfiguration
 }
 
 export interface Action {
   name: string
   ai: AI['name']
   prompt: Prompt['name']
-  target: 'inplace' | 'newfile'
+  target: 'replace' | 'append' | 'prepend' | 'newfile'
   git?: {
     commitMessageBeforeAction?: '__ask__' | (string & {})
     commitMessageAfterAction?: '__ask__' | (string & {})

@@ -26,11 +26,11 @@ export class RunActionCommand extends BaseCommand {
       const ai = await this.createAI(configuration)
       const completion = await ai.ask(prompt.content, this.getActiveEditorText())
 
-      if (action.target === 'inplace') {
-        await this.applyChanges(completion)
-      }
-      else if (action.target === 'newfile') {
+      if (action.target === 'newfile') {
         await this.showCompletion(completion)
+      }
+      else {
+        await this.applyChanges(completion, action.target)
       }
     })
 
@@ -92,7 +92,7 @@ export class RunActionCommand extends BaseCommand {
   }
 
   protected async createAI(configuration: AI): Promise<BaseAI> {
-    const AI = aiIndex[configuration.type]
+    const AI = aiIndex[configuration.provider]
 
     this.assert(AI, 'AI not found.')
 
@@ -101,7 +101,7 @@ export class RunActionCommand extends BaseCommand {
     this.assert(key, 'Key not found.')
 
     return new AI(key, {
-      model: configuration.model,
+      ...configuration.configuration,
     })
   }
 
@@ -138,14 +138,22 @@ export class RunActionCommand extends BaseCommand {
     await this.getActiveEditor().document.save()
   }
 
-  protected async applyChanges(content: string): Promise<void> {
+  protected async applyChanges(content: string, target: Action['target']): Promise<void> {
     this.logger.log('Apply changes...')
 
     this.getActiveEditor().edit((editBuilder) => {
       const range = this.hasActiveEditorSelection() ? this.getActiveEditorSelection() : new Range(0, 0, this.getActiveEditorText().length, 0)
 
-      editBuilder.delete(range)
-      editBuilder.insert(range.start, content)
+      if (target === 'replace') {
+        editBuilder.delete(range)
+      }
+
+      if (target === 'append') {
+        editBuilder.insert(range.end, `\n${content}`)
+      }
+      else if (target === 'replace' || target === 'prepend') {
+        editBuilder.insert(range.start, `${content}\n`)
+      }
     })
 
     await this.saveActiveEditor()
@@ -159,8 +167,6 @@ export class RunActionCommand extends BaseCommand {
   }
 
   protected async commitWithAction(action: Action, when: 'before' | 'after'): Promise<void> {
-    this.logger.log(`Commit changes ${when} action...`)
-
     let commitMessage = when === 'before' ? action.git?.commitMessageBeforeAction : action.git?.commitMessageAfterAction
 
     if (!commitMessage) {
@@ -173,6 +179,7 @@ export class RunActionCommand extends BaseCommand {
 
     this.assert(commitMessage, 'Commit message is required.')
 
+    this.logger.log(`Commit changes ${when} action...`)
     await this.commit(this.getActiveEditor().document.fileName, commitMessage)
   }
 
