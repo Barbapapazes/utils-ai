@@ -229,7 +229,7 @@
     "release": "npm run lint && bumpp"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.24.0",
+    "@antfu/eslint-config": "^3.3.2",
     "@swc/core": "^1.7.3",
     "@types/node": "^20.14.13",
     "@types/vscode": "^1.91.0",
