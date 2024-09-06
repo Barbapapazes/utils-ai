@@ -1,6 +1,6 @@
 import { type TreeDataProvider, TreeItem, TreeItemCollapsibleState } from 'vscode'
-import type { AI, Action } from '../types/index.js'
 import { Base } from '../core/Base.js'
+import type { Action, AI } from '../types/index.js'
 
 type Element = ActionTreeItem | GitTreeItem | TextTreeItem
 

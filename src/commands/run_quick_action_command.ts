@@ -1,7 +1,7 @@
 import { workspace } from 'vscode'
-import type { Action, QuickAction } from '../types/index.js'
 import { BaseCommand } from './base_command.js'
 import { RunActionCommand } from './run_action_command.js'
+import type { Action, QuickAction } from '../types/index.js'
 
 export class RunQuickActionCommand extends BaseCommand {
   action: Action | undefined
