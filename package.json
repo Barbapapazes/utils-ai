@@ -18,7 +18,7 @@
   "main": "./dist/index.cjs",
   "icon": "./images/icon.png",
   "engines": {
-    "vscode": "^1.83.1"
+    "vscode": "^1.94.2"
   },
   "activationEvents": [
     "onStartupFinished"
