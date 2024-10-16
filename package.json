@@ -5,7 +5,7 @@
   "type": "module",
   "version": "0.6.0",
   "private": true,
-  "packageManager": "pnpm@9.6.0",
+  "packageManager": "pnpm@9.12.2",
   "description": "Write faster with AI",
   "license": "MIT",
   "repository": {
