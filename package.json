@@ -230,13 +230,13 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.24.0",
-    "@swc/core": "^1.7.3",
-    "@types/node": "^20.14.13",
-    "@types/vscode": "^1.91.0",
-    "@vscode/vsce": "^2.31.1",
-    "bumpp": "^9.4.1",
+    "@swc/core": "^1.7.39",
+    "@types/node": "^20.17.0",
+    "@types/vscode": "^1.94.0",
+    "@vscode/vsce": "^2.32.0",
+    "bumpp": "^9.7.1",
     "eslint": "9.5.0",
-    "tsup": "^8.2.3",
-    "typescript": "^5.5.4"
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3"
   }
 }
