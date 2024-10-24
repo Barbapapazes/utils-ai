@@ -233,7 +233,7 @@
     "@swc/core": "^1.7.3",
     "@types/node": "^20.14.13",
     "@types/vscode": "^1.91.0",
-    "@vscode/vsce": "^2.31.1",
+    "@vscode/vsce": "^3.2.1",
     "bumpp": "^9.4.1",
     "eslint": "9.5.0",
     "tsup": "^8.2.3",
