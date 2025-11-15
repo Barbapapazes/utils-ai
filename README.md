@@ -1,3 +1,6 @@
+> [!WARNING]
+> This extension is deprecated and will no longer be maintained. Please consider using build-in prompts features of your editor instead.
+
 # Utils AI
 
 Easily save and use **AI** prompts in VSCode.
