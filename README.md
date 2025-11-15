@@ -112,13 +112,12 @@ You can also set up a quick action to easily access a command from an editor (a 
 ```json
 {
   "utilsAi.quickAction": {
-    "action": "<action>",
-    "fileTypes": [
-      "<fileType>" // e.g. ".md" for markdown files or ".txt" for text files
-    ]
+    "action": "<action>"
   }
 }
 ```
+
+> **Note**: The `fileTypes` configuration option has been deprecated. The quick action is now available for all file types.
 
 ## Examples
 

@@ -11,7 +11,7 @@ export function activate(context: ExtensionContext): void {
   Logger.log('Activating extension...')
 
   Logger.log('Set context...')
-  vsCommands.executeCommand('setContext', 'barbapapazes.utils-ai.showQuickAction', workspace.getConfiguration('utilsAi').get<QuickAction>('quickAction')?.fileTypes ?? [])
+  vsCommands.executeCommand('setContext', 'barbapapazes.utils-ai.showQuickAction', !!workspace.getConfiguration('utilsAi').get<QuickAction>('quickAction')?.action)
 
   Logger.log('Registering providers...')
   window.registerTreeDataProvider(

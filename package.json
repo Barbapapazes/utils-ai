@@ -138,7 +138,8 @@
             },
             "fileTypes": {
               "type": "array",
-              "description": "File types for which the quick action is available. Should start with a dot. Example: `.md`.",
+              "description": "DEPRECATED: File types for which the quick action is available. This option is deprecated and will be ignored. The quick action is now available for all file types.",
+              "deprecationMessage": "This option is deprecated. The quick action is now available for all file types.",
               "items": {
                 "type": "string"
               }
@@ -183,7 +184,7 @@
       "editor/title": [
         {
           "command": "barbapapazes.utils-ai.runQuickAction",
-          "when": "resourceExtname in barbapapazes.utils-ai.showQuickAction",
+          "when": "barbapapazes.utils-ai.showQuickAction",
           "group": "navigation"
         }
       ],

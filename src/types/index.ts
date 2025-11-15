@@ -32,5 +32,6 @@ export interface Action {
 
 export interface QuickAction {
   action: Action['name']
-  fileTypes: string[]
+  /** @deprecated This option is deprecated. The quick action is now available for all file types. */
+  fileTypes?: string[]
 }
