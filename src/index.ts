@@ -1,9 +1,9 @@
-import type { ExtensionContext } from 'vscode'
 import { commands as vsCommands, window, workspace } from 'vscode'
-import { Logger } from './core/Logger.js'
+import type { ExtensionContext } from 'vscode'
 import { commands } from './commands/index.js'
-import type { QuickAction } from './types/index.js'
+import { Logger } from './core/Logger.js'
 import { ActionsTreeDataProvider } from './providers/actions_tree_data_provider.js'
+import type { QuickAction } from './types/index.js'
 
 export function activate(context: ExtensionContext): void {
   Logger.createChannel()

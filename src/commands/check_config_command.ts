@@ -1,5 +1,5 @@
-import type { AI, Action, Prompt, QuickAction } from '../types/index.js'
 import { BaseCommand } from './base_command.js'
+import type { Action, AI, Prompt, QuickAction } from '../types/index.js'
 
 export class CheckConfigCommand extends BaseCommand {
   protected async run(): Promise<void> {

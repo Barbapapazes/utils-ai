@@ -1,10 +1,10 @@
+import { extensions, ProgressLocation, Range, window, workspace } from 'vscode'
 import type { Selection, TextEditor } from 'vscode'
-import { ProgressLocation, Range, extensions, window, workspace } from 'vscode'
-import type { AI, Action, Prompt } from '../types/index.js'
 import { ai as aiIndex } from '../ai/index.js'
-import type { BaseAI } from '../ai/base_ai.js'
 import { ActionTreeItem } from '../providers/actions_tree_data_provider.js'
 import { BaseCommand } from './base_command.js'
+import type { BaseAI } from '../ai/base_ai.js'
+import type { Action, AI, Prompt } from '../types/index.js'
 
 export class RunActionCommand extends BaseCommand {
   protected async run(actionName?: string | ActionTreeItem): Promise<void> {

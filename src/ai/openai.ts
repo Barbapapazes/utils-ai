@@ -1,5 +1,5 @@
-import type { OpenAIConfiguration } from '../types/index.js'
 import { BaseAI } from './base_ai.js'
+import type { OpenAIConfiguration } from '../types/index.js'
 
 export class OpenAI extends BaseAI<OpenAIConfiguration> {
   static name = 'OpenAI'

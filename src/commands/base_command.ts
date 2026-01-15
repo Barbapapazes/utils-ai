@@ -1,7 +1,7 @@
 import type { ExtensionContext } from 'vscode'
+import { Base } from '../core/Base.js'
 import { Logger } from '../core/Logger.js'
 import type { Awaitable } from '../types/index.js'
-import { Base } from '../core/Base.js'
 
 export abstract class BaseCommand extends Base {
   protected readonly logger: Logger

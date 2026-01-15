@@ -1,7 +1,7 @@
 import { AssertionError } from 'node:assert'
-import type { WorkspaceConfiguration } from 'vscode'
 import { window, workspace } from 'vscode'
-import type { AI, Action, Prompt } from '../types/index.js'
+import type { WorkspaceConfiguration } from 'vscode'
+import type { Action, AI, Prompt } from '../types/index.js'
 
 export class Base {
   /**
